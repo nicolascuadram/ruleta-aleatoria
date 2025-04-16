@@ -19,7 +19,7 @@ ref_grupo integer references instancia(id) on update cascade on delete cascade
 create table if not exists incidencia(
 id serial primary key,
 categoria text not null,
-descripción text,
+descripcion text,
 alumno boolean
 );
 
