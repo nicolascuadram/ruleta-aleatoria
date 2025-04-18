@@ -14,6 +14,6 @@ export const postQueries = {
     AddInstancia: "INSERT INTO instancia (semestre, profesor) VALUES ($1, $2) RETURNING *",
     AddGrupo: "INSERT INTO grupo (ref_instancia, nombre) VALUES ($1, $2) RETURNING *",
     AddAlumno: "INSERT INTO alumno (ref_grupo, nombre) VALUES ($1, $2) RETURNING *",
-    AddIncidencia: "INSERT INTO incidencia (categoria, descripcion) VALUES ($1, $2) RETURNING *",
+    AddIncidencia: "INSERT INTO incidencia (categoria, descripcion, alumno) VALUES ($1, $2, $3) RETURNING *",
     AddRegistro: "INSERT INTO registro (ref_incidencia, ref_grupo, alumnoescogido, fecha, comentario) VALUES ($1, $2, $3, CURRENT_TIMESTAMP, $4) RETURNING *",
 }

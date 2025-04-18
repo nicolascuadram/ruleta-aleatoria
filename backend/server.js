@@ -12,7 +12,7 @@ app.get('/health', (req, res) => {
     res.send('OK'); 
 })
 
-app.get('/db', async (req, res) => {
+app.get('/dbhealth', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
     res.json({ status: 'ok', time: result.rows[0].now });
