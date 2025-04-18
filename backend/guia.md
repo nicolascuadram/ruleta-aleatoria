@@ -4,6 +4,7 @@
 ### 1. Para recibir la lista de instancias (cursos).
 
 Método: GET
+
 Ruta: `ip:3000/api/instancias`
 
 
@@ -26,6 +27,7 @@ Recibiras un json con un arreglo de instancias, este json posee la siguiente est
 ### 2. Para recibir la lista de grupos pertenecientes a una instancia.
 
 Método: GET
+
 Ruta: `ip:3000/api/instancias/{id}`
 
 Donde id es el id de la instancia objetivo, Recibiras un json con un arreglo de grupo, este json posee la siguiente estructura: 
@@ -46,6 +48,7 @@ Donde id es el id de la instancia objetivo, Recibiras un json con un arreglo de 
 
 ### 3. Para recibir la lista de alumnos pertenecientes a un grupo.
 Método: GET
+
 Ruta: `ip:3000/api/grupos/{id}`
 
 Donde id es el id del grupo objetivo, Recibiras un json con un arreglo de alumnos, este json posee la siguiente estructura: 
@@ -68,6 +71,7 @@ Donde id es el id del grupo objetivo, Recibiras un json con un arreglo de alumno
 ### 4. Obtener todas las incidencias registradas
 
 Método: GET
+
 Ruta: `ip:3000/api/incidencias`
 
 Respuesta esperada:
@@ -90,6 +94,7 @@ Respuesta esperada:
 ### 5. Obtener solo las categorías de incidencias
 
 Método: GET
+
 Ruta: `ip:3000/api/categorias`
 
 Respuesta esperada:
@@ -110,6 +115,7 @@ Respuesta esperada:
 ### 6. Obtener la lista de registros
 
 Método: GET
+
 Ruta: `ip:3000/api/registros`
 
 Respuesta esperada:
@@ -137,6 +143,7 @@ Respuesta esperada:
 ```
 ### 7. Obtener la lista de registros por instancia
 Método: GET
+
 Ruta: `ip:3000/api/registros/{id}`
 
 Donde id es el id de la instancia a buscar.
@@ -171,6 +178,7 @@ Respuesta esperada:
 ### 1. Crear una instancia
 
 Método: POST
+
 Ruta: `ip:3000/api/instancia`
 
 Cuerpo (JSON):
@@ -194,6 +202,7 @@ Respuesta esperada:
 ### 2. Crear un grupo
 
 Método: POST
+
 Ruta: `ip:3000/api/grupos`
 
 Cuerpo (JSON):
@@ -218,6 +227,7 @@ Respuesta esperada:
 ### 3. Crear un alumno
 
 Método: POST
+
 Ruta: `ip:3000/api/alumnos`
 
 Cuerpo (JSON):
@@ -242,6 +252,7 @@ Respuesta esperada:
 ### 4. Crear una incidencia
 
 Método: POST
+
 Ruta: `ip:3000/api/incidencias`
 
 
@@ -269,6 +280,7 @@ Respuesta esperada:
 ### 5. Crear un registro de incidencia
 
 Método: POST
+
 Ruta: `ip:3000/api/registros`
 
 Cuerpo (JSON):
