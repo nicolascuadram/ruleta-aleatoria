@@ -46,6 +46,16 @@ router.get('/alumnos', async(req, res) => {
    }
 })
 
+//crea la ruta que retorna la lista de registros de una instancia
+router.get('/registros', async(req, res) => {
+   try {
+       const result = await pool.query(getQueries.GetRegistros);
+       res.json(result.rows);
+   } catch (error) {
+        res.status(500).json({error: "Error al obtener los registros"});
+   }
+})
+
 //Obtener los grupos asociados a una instancia, mediante el id de la instancia
 router.get('/instancias/:id', async(req, res) => {
    try {

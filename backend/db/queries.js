@@ -4,7 +4,7 @@ export const getQueries = {
     GetAlumnos: "SELECT * FROM alumno",
     GetIncidencias: "SELECT * FROM incidencia",
     GetCategories: "SELECT categoria FROM incidencia",
-    GetRegistros: "SELECT r.id, i.categoria, i.descripcion, r.alumnoescogido, r.fecha, r.comentario, g.nombre AS grupo FROM registro r JOIN incidencia i ON r.ref_incidencia = i.id JOIN grupo g ON r.ref_grupo = g.id ORDER BY r.fecha DESC",
+    GetRegistros: "SELECT r.id as id, i.categoria as tipo_incidencia, i.descripcion as incidencia, r.alumnoescogido as alumno, r.fecha, r.comentario, g.nombre AS grupo FROM registro r JOIN incidencia i ON r.ref_incidencia = i.id JOIN grupo g ON r.ref_grupo = g.id ORDER BY r.fecha DESC",
     GetInstanciaById: "SELECT * FROM instancia WHERE id = $1",
     GetGruposByInstancia: "SELECT * FROM grupo WHERE ref_instancia = $1",
     GetAlumnosByGrupo: "SELECT * FROM alumno WHERE ref_grupo = $1",

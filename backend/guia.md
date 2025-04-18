@@ -3,7 +3,9 @@
 ## Recibir información
 1. Para recibir la lista de instancias (cursos).
 
-Hacer una petición `GET` a `ip:3000/api/instancias`.
+Método: GET
+Ruta: `ip:3000/api/instancias`
+
 
 Recibiras un json con un arreglo de instancias, este json posee la siguiente estructura: 
 ```
@@ -23,9 +25,10 @@ Recibiras un json con un arreglo de instancias, este json posee la siguiente est
 
 2. Para recibir la lista de grupos pertenecientes a una instancia.
 
+Método: GET
+Ruta: `ip:3000/api/instancias/{id}`
 
-Hacer una petición `GET` a `ip:3000/api/instancias/{id}`, donde id es el id de la instancia objetivo
-Recibiras un json con un arreglo de grupo, este json posee la siguiente estructura: 
+Donde id es el id de la instancia objetivo, Recibiras un json con un arreglo de grupo, este json posee la siguiente estructura: 
 ```
 [
     {
@@ -42,8 +45,10 @@ Recibiras un json con un arreglo de grupo, este json posee la siguiente estructu
 ```
 
 3. Para recibir la lista de alumnos pertenecientes a un grupo.
+Método: GET
+Ruta: `ip:3000/api/grupos/{id}`
 
-Hacer una petición `GET` a `ip:3000/api/grupos/{id}`, donde id es el id del grupo objetivo
+Donde id es el id del grupo objetivo
 Recibiras un json con un arreglo de alumnos, este json posee la siguiente estructura: 
 
 ```
@@ -63,6 +68,7 @@ Recibiras un json con un arreglo de alumnos, este json posee la siguiente estruc
 
 4. Obtener todas las incidencias registradas
 
+Método: GET
 Ruta: `ip:3000/api/incidencias`
 
 Respuesta esperada:
@@ -82,9 +88,10 @@ Respuesta esperada:
 ]
 ```
 
-7. Obtener solo las categorías de incidencias
+5. Obtener solo las categorías de incidencias
 
-Ruta: ip:3000/api/categorias
+Método: GET
+Ruta: `ip:3000/api/categorias`
 
 Respuesta esperada:
 
@@ -101,82 +108,126 @@ Respuesta esperada:
 
 ```
 
-# Enviar información 
+6. Obtener la lista de registros
+
+Método: GET
+Ruta: `ip:3000/api/registros`
+
+Respuesta esperada:
+```
+[
+    {
+        "id":6,
+        "tipo_incidencia":"Pausa grupal",
+        "incidencia":"El grupo no trabaja esta semana",
+        "alumno":"elmismiso",
+        "fecha":"2025-04-18T20:41:58.763Z",
+        "comentario":"no puede seguir existiendo",
+        "grupo":"Grupo Alfa"
+    },
+    {
+        "id":4,
+        "tipo_incidencia":"Cambio de rol",
+        "incidencia":"Un alumno debe cambiar su rol habitual",
+        "alumno":"María Ríos",
+        "fecha":"2025-04-17T00:45:52.605Z",
+        "comentario":"María cambia su rol de lider a programadora",
+        "grupo":"Grupo Beta"
+    }
+]
+```
+
+## Enviar información 
 1. Crear una instancia
 
 Método: POST
-Ruta: ip:3000/api/instancias
+Ruta: `ip:3000/api/instancia`
 
 Cuerpo (JSON):
-
+```
 {
     "semestre": "2024-2",
     "profesor": "Prof. Ramírez"
 }
+```
 
 Respuesta esperada:
 
+```
 {
     "id": 3,
     "semestre": "2024-2",
     "profesor": "Prof. Ramírez"
 }
 
+```
 2. Crear un grupo
 
 Método: POST
-Ruta: ip:3000/api/grupos
+Ruta: `ip:3000/api/grupos`
 
 Cuerpo (JSON):
 
+```
 {
     "ref_instancia": 3,
     "nombre": "Grupo Gamma"
 }
 
+```
 Respuesta esperada:
 
+```
 {
     "id": 4,
     "ref_instancia": 3,
     "nombre": "Grupo Gamma"
 }
 
+```
 3. Crear un alumno
 
 Método: POST
-Ruta: ip:3000/api/alumnos
+Ruta: `ip:3000/api/alumnos`
 
 Cuerpo (JSON):
 
+```
 {
     "ref_grupo": 2,
     "nombre": "Juan Pérez"
 }
 
+```
 Respuesta esperada:
 
+```
 {
     "id": 10,
     "ref_grupo": 2,
     "nombre": "Juan Pérez"
 }
 
+```
 4. Crear una incidencia
 
 Método: POST
-Ruta: ip:3000/api/incidencias
+Ruta: `ip:3000/api/incidencias`
+
 
 Cuerpo (JSON):
 
+```
 {
     "categoria": "Asistencia",
     "descripcion": "Inasistencia reiterada"
     "alumno": "true"
 }
 
+```
 Respuesta esperada:
 
+```
 {
     "id": 5,
     "categoria": "Asistencia",
@@ -184,13 +235,15 @@ Respuesta esperada:
     "alumno": "true"
 }
 
+```
 5. Crear un registro de incidencia
 
 Método: POST
-Ruta: ip:3000/api/registros
+Ruta: `ip:3000/api/registros`
 
 Cuerpo (JSON):
 
+```
 {
     "ref_incidencia": 5,
     "ref_grupo": 2,
@@ -198,8 +251,10 @@ Cuerpo (JSON):
     "comentario": "No asistió a la clase de hoy"
 }
 
+```
 Respuesta esperada:
 
+```
 {
     "id": 12,
     "ref_incidencia": 5,
@@ -208,3 +263,5 @@ Respuesta esperada:
     "fecha": "2025-04-18T10:30:00.000Z",
     "comentario": "No asistió a la clase de hoy"
 }
+
+```
