@@ -1,7 +1,7 @@
 # Guia para el uso del backend
 
 ## Recibir información
-1. Para recibir la lista de instancias (cursos).
+### 1. Para recibir la lista de instancias (cursos).
 
 Método: GET
 Ruta: `ip:3000/api/instancias`
@@ -23,7 +23,7 @@ Recibiras un json con un arreglo de instancias, este json posee la siguiente est
 ]
 ```
 
-2. Para recibir la lista de grupos pertenecientes a una instancia.
+### 2. Para recibir la lista de grupos pertenecientes a una instancia.
 
 Método: GET
 Ruta: `ip:3000/api/instancias/{id}`
@@ -44,12 +44,11 @@ Donde id es el id de la instancia objetivo, Recibiras un json con un arreglo de 
 ]
 ```
 
-3. Para recibir la lista de alumnos pertenecientes a un grupo.
+### 3. Para recibir la lista de alumnos pertenecientes a un grupo.
 Método: GET
 Ruta: `ip:3000/api/grupos/{id}`
 
-Donde id es el id del grupo objetivo
-Recibiras un json con un arreglo de alumnos, este json posee la siguiente estructura: 
+Donde id es el id del grupo objetivo, Recibiras un json con un arreglo de alumnos, este json posee la siguiente estructura: 
 
 ```
 [
@@ -66,7 +65,7 @@ Recibiras un json con un arreglo de alumnos, este json posee la siguiente estruc
 ```
 
 
-4. Obtener todas las incidencias registradas
+### 4. Obtener todas las incidencias registradas
 
 Método: GET
 Ruta: `ip:3000/api/incidencias`
@@ -88,7 +87,7 @@ Respuesta esperada:
 ]
 ```
 
-5. Obtener solo las categorías de incidencias
+### 5. Obtener solo las categorías de incidencias
 
 Método: GET
 Ruta: `ip:3000/api/categorias`
@@ -108,7 +107,7 @@ Respuesta esperada:
 
 ```
 
-6. Obtener la lista de registros
+### 6. Obtener la lista de registros
 
 Método: GET
 Ruta: `ip:3000/api/registros`
@@ -136,9 +135,40 @@ Respuesta esperada:
     }
 ]
 ```
+### 7. Obtener la lista de registros por instancia
+Método: GET
+Ruta: `ip:3000/api/registros/{id}`
+
+Donde id es el id de la instancia a buscar.
+
+Respuesta esperada:
+```
+[
+    {
+        "id":6,
+        "tipo_incidencia":"Pausa grupal",
+        "incidencia":"El grupo no trabaja esta semana",
+        "alumno":"elmismiso",
+        "fecha":"2025-04-18T20:41:58.763Z",
+        "comentario":"no puede seguir existiendo",
+        "grupo":"Grupo Alfa"
+    },
+    {
+        "id":4,
+        "tipo_incidencia":"Cambio de rol",
+        "incidencia":"Un alumno debe cambiar su rol habitual",
+        "alumno":"María Ríos",
+        "fecha":"2025-04-17T00:45:52.605Z",
+        "comentario":"María cambia su rol de lider a programadora",
+        "grupo":"Grupo Beta"
+    }
+]
+```
+
+
 
 ## Enviar información 
-1. Crear una instancia
+### 1. Crear una instancia
 
 Método: POST
 Ruta: `ip:3000/api/instancia`
@@ -161,7 +191,7 @@ Respuesta esperada:
 }
 
 ```
-2. Crear un grupo
+### 2. Crear un grupo
 
 Método: POST
 Ruta: `ip:3000/api/grupos`
@@ -185,7 +215,7 @@ Respuesta esperada:
 }
 
 ```
-3. Crear un alumno
+### 3. Crear un alumno
 
 Método: POST
 Ruta: `ip:3000/api/alumnos`
@@ -209,7 +239,7 @@ Respuesta esperada:
 }
 
 ```
-4. Crear una incidencia
+### 4. Crear una incidencia
 
 Método: POST
 Ruta: `ip:3000/api/incidencias`
@@ -236,7 +266,7 @@ Respuesta esperada:
 }
 
 ```
-5. Crear un registro de incidencia
+### 5. Crear un registro de incidencia
 
 Método: POST
 Ruta: `ip:3000/api/registros`

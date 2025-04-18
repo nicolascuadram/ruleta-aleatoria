@@ -55,6 +55,17 @@ router.get('/registros', async(req, res) => {
         res.status(500).json({error: "Error al obtener los registros"});
    }
 })
+router.get('/registros/:id', async(req, res) => {
+   try {
+       const { id } = req.params;
+       const result = await pool.query(getQueries.GetRegistrosByInstancia, [id]);
+       res.json(result.rows);
+   } catch (error) {
+        res.status(500).json({error: "Error al obtener los registros"});
+   }
+})
+
+
 
 //Obtener los grupos asociados a una instancia, mediante el id de la instancia
 router.get('/instancias/:id', async(req, res) => {
