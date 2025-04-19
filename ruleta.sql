@@ -49,7 +49,7 @@ INSERT INTO alumno (nombre, ref_grupo) VALUES
 ('Tomás Vidal', 3),
 ('Valentina Díaz', 3);
 
-INSERT INTO incidencia (categoria, descripción, alumno) VALUES
+INSERT INTO incidencia (categoria, descripcion, alumno) VALUES
 ('Pausa grupal', 'El grupo no trabaja esta semana', false),
 ('Sin herramientas', 'El grupo no puede usar computador esta semana', false),
 ('Alumno inactivo', 'Un alumno del grupo no puede trabajar esta semana', true),
