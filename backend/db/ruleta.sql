@@ -239,11 +239,18 @@ ALTER TABLE ONLY public.registro ALTER COLUMN id SET DEFAULT nextval('public.reg
 --
 
 COPY public.alumno (id, nombre, ref_grupo) FROM stdin;
-7	alumno1	1
-8	alumno2	2
-9	alumno3	1
-10	alumno4	2
-11	alumnoprueba	1
+1	Ana Torres	1
+2	Luis Pérez	1
+3	Carlos Soto	2
+4	María Ríos	2
+5	Tomás Vidal	3
+6	Valentina Díaz	3
+7	Ana Torres	1
+8	Luis Pérez	1
+9	Carlos Soto	2
+10	María Ríos	2
+11	Tomás Vidal	3
+12	Valentina Díaz	3
 \.
 
 
@@ -255,7 +262,9 @@ COPY public.grupo (id, nombre, ref_instancia) FROM stdin;
 1	Grupo Alfa	1
 2	Grupo Beta	1
 3	Grupo Gamma	2
-4	Grupo prueba	1
+4	Grupo Alfa	1
+5	Grupo Beta	1
+6	Grupo Gamma	2
 \.
 
 
@@ -279,7 +288,8 @@ COPY public.incidencia (id, categoria, descripcion, alumno) FROM stdin;
 COPY public.instancia (id, semestre, profesor) FROM stdin;
 1	2024-1	Prof. González
 2	2024-2	Prof. Ramírez
-3	2024-2	Prof. Pruebas
+3	2024-1	Prof. González
+4	2024-2	Prof. Ramírez
 \.
 
 
@@ -288,12 +298,11 @@ COPY public.instancia (id, semestre, profesor) FROM stdin;
 --
 
 COPY public.registro (id, ref_incidencia, ref_grupo, alumnoescogido, fecha, comentario) FROM stdin;
-1	1	1	\N	2025-04-14 20:45:52.605427	Se pausó al Grupo Alfa por baja participación
-2	3	1	Luis Pérez	2025-04-15 20:45:52.605427	Luis no participará esta semana
-3	2	2	\N	2025-04-13 20:45:52.605427	Grupo Beta sin acceso a computadores
-4	4	2	María Ríos	2025-04-16 20:45:52.605427	María cambia su rol de lider a programadora
-5	5	3	\N	2025-04-16 20:45:52.605427	Grupo Gamma tendrá entrega doble esta semana
-6	1	1	elmismiso	2025-04-18 16:41:58.763146	no puede seguir existiendo
+6	1	1	\N	2025-04-16 23:17:41.265481	Se pausó al Grupo Alfa por baja participación
+7	3	1	Luis Pérez	2025-04-17 23:17:41.265481	Luis no participará esta semana
+8	2	2	\N	2025-04-15 23:17:41.265481	Grupo Beta sin acceso a computadores
+9	4	2	María Ríos	2025-04-18 23:17:41.265481	María cambia su rol de lider a programadora
+10	5	3	\N	2025-04-18 23:17:41.265481	Grupo Gamma tendrá entrega doble esta semana
 \.
 
 
@@ -301,35 +310,35 @@ COPY public.registro (id, ref_incidencia, ref_grupo, alumnoescogido, fecha, come
 -- Name: alumno_id_seq; Type: SEQUENCE SET; Schema: public; Owner: furzua
 --
 
-SELECT pg_catalog.setval('public.alumno_id_seq', 11, true);
+SELECT pg_catalog.setval('public.alumno_id_seq', 12, true);
 
 
 --
 -- Name: grupo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: furzua
 --
 
-SELECT pg_catalog.setval('public.grupo_id_seq', 4, true);
+SELECT pg_catalog.setval('public.grupo_id_seq', 6, true);
 
 
 --
 -- Name: incidencia_id_seq; Type: SEQUENCE SET; Schema: public; Owner: furzua
 --
 
-SELECT pg_catalog.setval('public.incidencia_id_seq', 9, true);
+SELECT pg_catalog.setval('public.incidencia_id_seq', 5, true);
 
 
 --
 -- Name: instancia_id_seq; Type: SEQUENCE SET; Schema: public; Owner: furzua
 --
 
-SELECT pg_catalog.setval('public.instancia_id_seq', 3, true);
+SELECT pg_catalog.setval('public.instancia_id_seq', 4, true);
 
 
 --
 -- Name: registro_id_seq; Type: SEQUENCE SET; Schema: public; Owner: furzua
 --
 
-SELECT pg_catalog.setval('public.registro_id_seq', 6, true);
+SELECT pg_catalog.setval('public.registro_id_seq', 10, true);
 
 
 --
@@ -377,7 +386,7 @@ ALTER TABLE ONLY public.registro
 --
 
 ALTER TABLE ONLY public.alumno
-    ADD CONSTRAINT alumno_ref_grupo_fkey FOREIGN KEY (ref_grupo) REFERENCES public.instancia(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT alumno_ref_grupo_fkey FOREIGN KEY (ref_grupo) REFERENCES public.grupo(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
