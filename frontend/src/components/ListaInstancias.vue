@@ -58,7 +58,7 @@ instancias.value = [
     },
 ];
 
-/* const getInstancias = async (id) => {
+/* const getInstancias = async () => {
     try {
         const response = await fetch("http://localhost:3000/api/instancias", {
             method: "GET",
