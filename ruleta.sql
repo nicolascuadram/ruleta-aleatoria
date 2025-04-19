@@ -13,7 +13,7 @@ ref_instancia integer references instancia(id) on update cascade on delete casca
 create table if not exists alumno(
 id serial primary key,
 nombre text,
-ref_grupo integer references instancia(id) on update cascade on delete cascade
+ref_grupo integer references grupo(id) on update cascade on delete cascade
 );
 
 create table if not exists incidencia(
