@@ -1,0 +1,35 @@
+---
+interface Props {
+    url: string;
+    titulo: string;
+    semestre: string;
+    cont_alumnos: number;
+    cont_grupos: number;
+}
+
+const { url, titulo, semestre, cont_alumnos, cont_grupos } = Astro.props;
+---
+
+<button
+    class="flex flex-col justify-between items-center w-[240px] h-[240px] p-4 border border-zinc-700
+            rounded-md shadow-md transition duration-300 cursor-pointer bg-zinc-950 
+            hover:bg-gradient-to-br from-zinc-950 to-zinc-800"
+    onclick={`window.location.href='${url}'`}
+>
+    <header class="flex flex-col items-start text-start w-full">
+        <h1 class="text-lg font-semibold">{titulo}</h1>
+        <h2 class="text-sm font-medium text-zinc-300">{semestre}</h2>
+    </header>
+    <aside class="flex justify-start items-center gap-2 text-center w-full">
+        <span
+            class="px-2 py-1 bg-zinc-50 text-zinc-900 font-medium rounded-md shadow-md"
+        >
+            <p class="text-xs">{cont_alumnos} alumnos</p>
+        </span>
+        <span
+            class="px-2 py-1 bg-zinc-50 text-zinc-900 font-medium rounded-md shadow-md"
+        >
+            <p class="text-xs">{cont_grupos} grupos</p>
+        </span>
+    </aside>
+</button>
