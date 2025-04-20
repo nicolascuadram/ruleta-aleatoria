@@ -8,11 +8,12 @@ const props = defineProps({
     },
 });
 
-/* const grupos = ref(null);
+const API_URL = import.meta.env.PUBLIC_API_URL;
+const grupos = ref(null);
 
 const getGrupos = async () => {
     try {
-        const response = await fetch(`https://localhost:3000/api/instancias/${props.id}`, {
+        const response = await fetch(API_URL + `/api/instancias/${props.id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -33,7 +34,7 @@ const getGrupos = async () => {
 
 onMounted(() => {
     getGrupos();
-}); */
+});
 </script>
 
 <template>

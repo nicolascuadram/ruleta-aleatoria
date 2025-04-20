@@ -7,10 +7,16 @@ const { id } = Astro.params as { id: string };
 
 // Función para generar rutas
 export async function getStaticPaths() {
-	/* const res = await fetch("https://localhost:3000/api/instancias");
-	const instancias = await res.json(); */
+	const API_URL = import.meta.env.PUBLIC_API_URL;
+	const res = await fetch(API_URL + `/api/instancias/`);
+	const instancias = await res.json();
+
+	return instancias.map((instancia: any) => ({
+		params: { id: instancia.id.toString() },
+	}));
 	
-	const instancias = {
+	// Si no se puede acceder a la API, puedes usar datos de ejemplo como los siguientes:
+	/* const instancias = {
 		value: [
 			{
 				id: 1,
@@ -65,13 +71,9 @@ export async function getStaticPaths() {
 		],
 	};
 
-	/* return instancias.map((instancia: any) => ({
-		params: { id: instancia.id.toString() },
-	})); */
-
 	return instancias.value.map((instancia: any) => ({
 		params: { id: instancia.id.toString() },
-	}));
+	})); */
 }
 ---
 

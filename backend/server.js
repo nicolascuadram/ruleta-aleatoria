@@ -1,11 +1,12 @@
 import express from "express";
+import cors from 'cors';
 import pool from "./db/db.js";
 import router from "./routes/dbroutes.js";
 
 const app = express();
 
-
 app.use(express.json());
+app.use(cors({ origin: 'http://localhost:4321', credentials: true }));
 app.use('/api', router);
 
 app.get('/health', (req, res) => {
