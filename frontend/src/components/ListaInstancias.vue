@@ -2,10 +2,36 @@
 import CardInstancia from './CardInstancia.vue';
 import { ref, onMounted } from 'vue';
 
+const API_URL = import.meta.env.PUBLIC_API_URL;
 const instancias = ref([]);
 
+const getInstancias = async () => {
+    try {
+        const response = await fetch(API_URL + `/api/instancias/`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!response.ok) {
+            console.error("Status:", response.status);
+            throw new Error(
+                "Error en la respuesta del servidor: " + response.statusText
+            );
+        }
+        const data = await response.json();
+        instancias.value = data;
+    } catch (err) {
+        console.error("Error fetching instancias:", err);
+    }
+};
+
+onMounted(() => {
+    getInstancias();
+});
+
 // Simulación de datos para instancias
-instancias.value = [
+/* instancias.value = [
     {
         id: 1,
         semestre: '2025-1',
@@ -56,32 +82,7 @@ instancias.value = [
         semestre: '2026-1',
         profesor: 'Luis Silvestre',
     },
-];
-
-/* const getInstancias = async () => {
-    try {
-        const response = await fetch("http://localhost:3000/api/instancias", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        if (!response.ok) {
-            console.error("Status:", response.status);
-            throw new Error(
-                "Error en la respuesta del servidor: " + response.statusText
-            );
-        }
-        const data = await response.json();
-        instancias.value = data;
-    } catch (err) {
-        console.error("Error fetching instancias:", err);
-    }
-};
-
-onMounted(() => {
-    getInstancias();
-}); */
+]; */
 </script>
 
 <template>
