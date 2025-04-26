@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Grupos from "../../components/Grupos.vue";
+import Equipos from "../../components/Equipos.vue";
 
 // Obtener el parámetro id de la URL
 const { id } = Astro.params as { id: string };
@@ -14,7 +14,7 @@ export async function getStaticPaths() {
 	return instancias.map((instancia: any) => ({
 		params: { id: instancia.id.toString() },
 	}));
-	
+
 	// Si no se puede acceder a la API, puedes usar datos de ejemplo como los siguientes:
 	/* const instancias = {
 		value: [
@@ -78,12 +78,18 @@ export async function getStaticPaths() {
 ---
 
 <Layout>
-	<!-- Lista de Grupos de la Instancia -->
+	<!-- Lista de Equipos de la Instancia -->
 	<div class="flex justify-between items-start w-full">
-		<Grupos id={id} client:load />
-		<Grupos id={id} client:load />
-		<Grupos id={id} client:load />
-		<!-- Ruleta Aleatoria -->
-    	<!-- Detalles o Configuraciones de la Ruleta -->
+		<div class="basis-1/4 grow">
+			<Equipos id={id} client:load />
+		</div>
+
+		<div class="basis-2/4 grow">
+			<!-- Ruleta Aleatoria -->
+		</div>
+
+		<div class="basis-1/4 grow">
+			<!-- Detalles o Configuraciones de la Ruleta -->
+		</div>
 	</div>
 </Layout>

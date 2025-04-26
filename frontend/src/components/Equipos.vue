@@ -1,5 +1,5 @@
 <script setup>
-import Alumnos from "../../components/Alumnos.vue";
+import Alumnos from "./Alumnos.vue";
 import { ref, onMounted } from 'vue';
 
 const props = defineProps({
@@ -10,10 +10,10 @@ const props = defineProps({
 });
 
 const API_URL = import.meta.env.PUBLIC_API_URL;
-const grupos = ref(null);
+const equipos = ref(null);
 
-// Función para obtener los grupos de la instancia desde la API
-const getGrupos = async () => {
+// Función para obtener los equipos de la instancia desde la API
+const getEquipos = async () => {
     try {
         const response = await fetch(API_URL + `/api/instancias/${props.id}`, {
             method: "GET",
@@ -28,30 +28,30 @@ const getGrupos = async () => {
             );
         }
         const data = await response.json();
-        grupos.value = data;
+        equipos.value = data;
     } catch (err) {
-        console.error("Error fetching grupos:", err);
+        console.error("Error fetching equipos:", err);
     }
 };
 
 onMounted(() => {
-    getGrupos();
+    getEquipos();
 });
 </script>
 
 <template>
     <section class="flex flex-col justify-center items-center w-full p-4">
-        <div v-if="grupos" class="flex flex-col items-center justify-start w-full h-full rounded-md overflow-hidden border border-zinc-300">
+        <div v-if="equipos" class="flex flex-col items-center justify-start w-full h-full overflow-y-scroll border border-zinc-700 rounded-md shadow-md">
             <div class="p-4 w-full">
                 <h1 class="text-lg font-bold text-center">Lista de Equipos</h1>
             </div>
-            <div v-for="grupo in grupos" :key="grupo.id" class="flex flex-col items-start justify-start w-full p-4 border border-zinc-300">
-                <h2 class="text-base font-semibold">{{ grupo.nombre }}</h2>
-                <!--<Alumnos :id="grupo.id"/>-->
+            <div v-for="equipo in equipos" :key="equipo.id" class="flex flex-col items-start justify-start w-full p-4 border-t border-zinc-700">
+                <h2 class="text-base font-semibold">{{ equipo.nombre }}</h2>
+                <Alumnos :id="equipo.id"/>
             </div>
         </div>
         <div v-else class="flex justify-center items-center w-full h-full">
-            <p class="text-lg font-medium text-zinc-500">Cargando grupos...</p>
+            <p class="text-lg font-medium text-zinc-500">Cargando equipos...</p>
         </div>
     </section>
 </template>
