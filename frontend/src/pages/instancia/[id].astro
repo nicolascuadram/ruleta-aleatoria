@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Ruleta from "../../components/Ruleta.vue";
+import Grupos from "../../components/Grupos.vue";
 
 // Obtener el parámetro id de la URL
 const { id } = Astro.params as { id: string };
@@ -78,5 +78,12 @@ export async function getStaticPaths() {
 ---
 
 <Layout>
-	<Ruleta id={id} client:load />
+	<!-- Lista de Grupos de la Instancia -->
+	<div class="flex justify-between items-start w-full">
+		<Grupos id={id} client:load />
+		<Grupos id={id} client:load />
+		<Grupos id={id} client:load />
+		<!-- Ruleta Aleatoria -->
+    	<!-- Detalles o Configuraciones de la Ruleta -->
+	</div>
 </Layout>
