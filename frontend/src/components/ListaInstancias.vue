@@ -5,6 +5,7 @@ import { ref, onMounted } from 'vue';
 const API_URL = import.meta.env.PUBLIC_API_URL;
 const instancias = ref([]);
 
+// Función para obtener las instancias desde la API
 const getInstancias = async () => {
     try {
         const response = await fetch(API_URL + `/api/instancias/`, {
