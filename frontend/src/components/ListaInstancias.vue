@@ -87,8 +87,23 @@ onMounted(() => {
 </script>
 
 <template>
-    <section class="flex flex-col items-center justify-center w-full h-[530px] p-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-y-scroll">
+    <section class="flex flex-col items-center justify-start w-full h-full p-4">
+        <!-- Header -->
+        <div class="flex items-center justify-between w-full py-4">
+            <!-- Título y descripción -->
+            <div class="flex flex-col items-start justify-start w-full">
+                <h1 class="text-2xl font-bold">Instancias</h1>
+                <p class="text-base">Selecciona una instancia para gestionar los proyectos tecnológicos.</p>
+            </div>
+            <!-- Botones -->
+            <div>
+                <button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap">
+                    Crear nueva instancia
+                </button>
+            </div>
+        </div>
+        <!-- Lista de instancias -->
+        <div class="flex flex-wrap gap-4 w-full h-full overflow-y-scroll">
             <CardInstancia v-for="instancia in instancias" :key="instancia.id" 
                 :url="`/instancia/${instancia.id}`"
                 titulo="Gestión de Proyectos Tecnológicos" 

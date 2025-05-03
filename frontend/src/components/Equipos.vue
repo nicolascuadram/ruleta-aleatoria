@@ -40,12 +40,12 @@ onMounted(() => {
 </script>
 
 <template>
-    <section class="flex flex-col justify-center items-center w-full p-4">
+    <section class="flex flex-col justify-center items-center w-full h-full p-4">
         <div v-if="equipos" class="flex flex-col items-center justify-start w-full h-full overflow-y-scroll border border-zinc-700 rounded-md shadow-md">
-            <div class="p-4 w-full">
+            <div class="p-4 w-full border-b border-zinc-700">
                 <h1 class="text-lg font-bold text-center">Lista de Equipos</h1>
             </div>
-            <div v-for="equipo in equipos" :key="equipo.id" class="flex flex-col items-start justify-start w-full p-4 border-t border-zinc-700">
+            <div v-for="equipo in equipos" :key="equipo.id" class="flex flex-col items-start justify-start w-full p-4 border-b border-zinc-700">
                 <h2 class="text-base font-semibold">{{ equipo.nombre }}</h2>
                 <Alumnos :id="equipo.id"/>
             </div>

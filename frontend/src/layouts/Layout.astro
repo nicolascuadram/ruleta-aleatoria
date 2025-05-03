@@ -1,9 +1,10 @@
 ---
 import Navbar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
-import '@fontsource-variable/inter';
+import "@fontsource-variable/inter";
 import "../styles/global.css";
 ---
+
 <!doctype html>
 <html lang="es">
 	<head>
@@ -13,17 +14,20 @@ import "../styles/global.css";
 		<meta name="generator" content={Astro.generator} />
 		<title>Ruleta Aleatoria</title>
 	</head>
-	<body class="bg-zinc-950 text-zinc-50">
-		<main class="flex flex-col items-center justify-between w-full h-screen overflow-hidden">
-			<Navbar client:load/>
-			<slot />
-			<Footer client:load/>
-		</main>
+	<body class="bg-zinc-950 text-zinc-50 h-screen overflow-hidden">
+		<div class="flex flex-col h-full">
+			<Navbar client:load />
+			<!-- Contenido principal -->
+			<main class="h-full flex flex-col overflow-hidden">
+				<slot />
+			</main>
+			<Footer client:load />
+		</div>
 	</body>
 </html>
 
 <style>
 	body {
-		font-family: 'Inter Variable', sans-serif;
+		font-family: "Inter Variable", sans-serif;
 	}
 </style>
