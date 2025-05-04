@@ -52,27 +52,28 @@ const postInstancia = async () => {
 </script>
 
 <template>
-    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-[#00000090] z-50">
-        <div class="flex flex-col justify-center items-center rounded-md p-8 bg-zinc-900">
+    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-[#000000dd] z-50">
+        <div class="flex flex-col justify-center items-center rounded-md px-6 py-4 bg-zinc-950 border border-zinc-700">
             <form @submit.prevent="postInstancia" class="flex flex-col justify-center items-center gap-4">
-                <div class="w-full text-center">
-                    <h2 class="text-xl font-bold">Crear Nueva Instancia</h2>
+                <div class="flex flex-col w-full text-start gap-1">
+                    <h2 class="text-xl font-bold">Nueva Instancia</h2>
+                    <p class="text-sm">Selecciona un semestre para crear una nueva instancia.</p>
                 </div>
-                <div class="flex flex-col gap-1">
-                    <label for="semestre" class="block text-sm font-medium">Semestre</label>
+                <div class="flex flex-col items-start w-full gap-1">
+                    <label for="semestre" class="block text-sm font-bold">Semestre</label>
                     <input type="text" id="semestre" v-model="semestre" required
-                        class="block w-full text-base border border-gray-300 rounded-md outline-none px-2 py-1" />
+                        class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1" />
                 </div>
-                <div class="flex justify-between items-center w-full gap-6">
+                <div class="flex justify-end items-center w-full gap-4">
                     <button
-                        class="bg-zinc-50 text-zinc-900 font-medium text-base py-2 px-4 rounded-md hover:bg-red-400 transition duration-300 cursor-pointer shadow-md text-nowrap w-full"
+                        class="bg-zinc-800 text-white font-medium text-base py-2 px-4 rounded-md hover:bg-zinc-700 transition duration-300 cursor-pointer shadow-md text-nowrap"
                         type="button" @click="closeModal">
                         Cancelar
                     </button>
                     <button
-                        class="bg-zinc-50 text-zinc-900 font-medium text-base py-2 px-4 rounded-md hover:bg-green-300 transition duration-300 cursor-pointer shadow-md text-nowrap w-full"
+                        class="bg-zinc-50 text-zinc-900 font-medium text-base py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap"
                         type="submit">
-                        Crear
+                        Crear Instancia
                     </button>
                 </div>
             </form>
