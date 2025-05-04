@@ -41,7 +41,7 @@ onMounted(() => {
 
 <template>
     <section class="flex flex-col justify-center items-center w-full h-full p-4">
-        <div v-if="equipos" class="flex flex-col items-center justify-start w-full h-full overflow-y-scroll border border-zinc-700 rounded-md shadow-md">
+        <div v-if="equipos" class="flex flex-col items-center justify-start w-full h-full overflow-y-scroll hide-scrollbar border border-zinc-700 rounded-md shadow-md">
             <div class="p-4 w-full border-b border-zinc-700">
                 <h1 class="text-lg font-bold text-center">Lista de Equipos</h1>
             </div>

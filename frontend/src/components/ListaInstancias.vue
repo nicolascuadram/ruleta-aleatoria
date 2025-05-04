@@ -114,7 +114,7 @@ onMounted(() => {
             </div>
         </div>
         <!-- Lista de instancias -->
-        <div class="flex flex-wrap gap-4 w-full h-full overflow-y-scroll">
+        <div class="flex flex-wrap gap-4 w-full h-full overflow-y-scroll hide-scrollbar">
             <CardInstancia v-for="instancia in instancias" :key="instancia.id" 
                 :url="`/instancia/${instancia.id}`"
                 titulo="Gestión de Proyectos Tecnológicos" 
