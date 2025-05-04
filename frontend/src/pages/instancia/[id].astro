@@ -81,20 +81,15 @@ export async function getStaticPaths() {
 <Layout>
 	<!-- Lista de Equipos de la Instancia -->
 	 <div class="w-full overflow-x-auto whitespace-nowrap">
-		<div class="flex justify-between items-start w-full ">
-			<div class="basis-1/4 grow">
-				<CrearEquipos id={id} client:load />
-				<Equipos id={id} client:load />
-			</div>
-	
-			<div class="basis-2/4 grow">
-				<!-- Ruleta Aleatoria -->
-			</div>
-	
-			<div class="basis-1/4 grow">
-				<!-- Detalles o Configuraciones de la Ruleta -->
-			</div>
+		<div class="basis-1/4 grow h-full">
+			<!-- Lista de Equipos de la Instancia -->
+			<Equipos id={id} client:load />
+		</div>
+		<div class="basis-2/4 grow h-full">
+			<!-- Ruleta Aleatoria -->
+		</div>
+		<div class="basis-1/4 grow h-full">
+			<!-- Detalles o Configuraciones de la Ruleta -->
 		</div>
 	 </div>
-	
 </Layout>

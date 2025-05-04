@@ -179,7 +179,7 @@ Respuesta esperada:
 
 Método: POST
 
-Ruta: `ip:3000/api/instancia`
+Ruta: `ip:3000/api/instancias`
 
 Cuerpo (JSON):
 ```
