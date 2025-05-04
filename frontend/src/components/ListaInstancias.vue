@@ -98,7 +98,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <section class="flex flex-col items-center justify-start w-full h-full p-4">
+    <section class="flex flex-col items-center justify-start w-full h-full p-4 overflow-y-scroll hide-scrollbar">
         <!-- Header -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-between w-full py-4 gap-4">
             <!-- Título y descripción -->
@@ -114,7 +114,7 @@ onMounted(() => {
             </div>
         </div>
         <!-- Lista de instancias -->
-        <div class="flex flex-wrap gap-4 w-full h-full overflow-y-scroll hide-scrollbar">
+        <div class="flex flex-wrap gap-4 w-full h-full">
             <CardInstancia v-for="instancia in instancias" :key="instancia.id" 
                 :url="`/instancia/${instancia.id}`"
                 titulo="Gestión de Proyectos Tecnológicos" 
