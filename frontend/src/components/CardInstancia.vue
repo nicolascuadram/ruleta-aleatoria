@@ -1,4 +1,5 @@
 <script setup>
+import { UserPen } from 'lucide-vue-next';
 
 defineProps({
 	url: {
@@ -27,7 +28,7 @@ defineProps({
 		</header>
 		<aside class="flex justify-start items-center gap-2 text-center w-full">
 			<span class="flex justify-center items-center gap-2 px-2 py-1 bg-zinc-50 text-zinc-900 font-medium rounded-md shadow-md">
-				<img src="/src/assets/circle-user-round.svg" alt="Profesor" class="w-5 h-5" />
+				<UserPen color="#18181b" :size="20"/>
 				<p class="text-xs font-medium">{{ profesor }}</p>
 			</span>
 		</aside>
