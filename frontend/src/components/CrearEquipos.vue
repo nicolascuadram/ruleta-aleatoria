@@ -1,15 +1,15 @@
 <template>
   <div class="relative">
-    <div class="flex flex-col items-center w-full p-4 border-t border-zinc-700 z-0">
-      <div class="flex flex-row items-center justify-center space-x-4">
-        <div  v-if="!hasGroups">
+    <div class="flex flex-col items-center w-full p-4 z-0">
+      <div class="flex flex-row items-center justify-end space-x-4 w-full">
+        <!-- <div  v-if="!hasGroups">
           <h1>Subir equipos:</h1>
         </div>
-        <div v-else>
+        <div v-else> -->
           <!-- OJO COMO MANEJAMOS LO DE EDITAR -->
-          <h1>Agregar mas equipos:</h1>
-        </div>
-        <label class="bg-white text-black border border-gray-300 px-4 py-2 rounded cursor-pointer hover:bg-gray-100">
+          <!-- <h1 class="text-nowrap">Agregar mas equipos:</h1>
+        </div> -->
+        <label class="bg-white text-black border border-gray-300 px-4 py-2 rounded cursor-pointer hover:bg-gray-100 text-nowrap">
           Subir archivo CSV
           <input type="file" @change="handleFileChange" accept=".csv" class="hidden" />
         </label>
