@@ -80,9 +80,9 @@ export async function getStaticPaths() {
 
 <Layout>
 	<div class="flex justify-between items-start w-full h-full">
+		
 		<div class="basis-1/4 grow h-full">
 			<!-- Lista de Equipos de la Instancia -->
-			<CrearEquipos id={id} client:load />
 			<Equipos id={id} client:load />
 		</div>
 		<div class="basis-2/4 grow h-full">
@@ -91,6 +91,7 @@ export async function getStaticPaths() {
 		<div class="basis-1/4 grow h-full">
 			<!-- Detalles o Configuraciones de la Ruleta -->
 		</div>
+		<CrearEquipos id={id} client:load />
 	</div>
 </Layout>
 

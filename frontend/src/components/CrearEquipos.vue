@@ -2,7 +2,7 @@
   <div class="relative">
     <div class="flex flex-col items-center w-full p-4 border-t border-zinc-700 z-0">
       <div class="flex flex-row items-center justify-center space-x-4">
-        <div  v-if="alumnos!=null">
+        <div  v-if="!hasGroups">
           <h1>Subir equipos:</h1>
         </div>
         <div v-else>
@@ -47,7 +47,8 @@
 
 <script>
 import Papa from "papaparse";
-import Alumnos from "./Alumnos.vue";
+
+const API_URL = import.meta.env.PUBLIC_API_URL;
 
 export default{
   props:{
@@ -58,6 +59,7 @@ export default{
   },
   data(){
     return {
+      hasGroups: false,
       selectedFile: null,
       uploadStatus: '',
       parsedCSV: [],
@@ -67,6 +69,25 @@ export default{
     };
   },
   methods:{
+    async fetchGruposPorInstancia(){
+      try{
+        const response = await fetch(API_URL + `/api/instancias/${this.id}`);
+        if(!response.ok) throw new Error('Failed to fetch instance');
+
+        const data = await response.json();
+        //console.log("Datos recibidos:", data); // Para ver el contenido de la respuesta
+
+        if(Array.isArray(data)&&data.length > 0){ // Verifica si es un array y tiene elementos
+          this.hasGroups = true;
+        }else{
+          this.hasGroups = false;
+        }
+      }catch (error){
+        //console.error('Error fetching instance:', error);
+        this.hasGroups = false;
+      }
+    },
+
     parseCSV(file){
       return new Promise((resolve, reject)=>{
         if(!file){
@@ -287,8 +308,18 @@ export default{
         body: JSON.stringify(alumnoData),
       });
       return await response.json();
-    }
-  }
+    },
+
+    async fetchData() {
+      // Llamar a la función asíncrona dentro de un método separado
+      await this.fetchGruposPorInstancia();
+      console.log(this.hasGroups);
+    },
+  },
+  mounted() {
+    // Llamar al método fetchData desde mounted()
+    this.fetchData();
+  },
 };
 </script>
 
