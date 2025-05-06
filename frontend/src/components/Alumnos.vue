@@ -40,6 +40,7 @@ onMounted(() => {
 
 <template>
     <div v-if="alumnos" class="flex flex-col items-center justify-start w-full h-full overflow-hidden border border-zinc-700 rounded-md shadow-md mt-4">
+        <!-- Lista de alumnos -->
         <div v-for="alumno in alumnos" :key="alumno.id" class="flex flex-col items-start justify-start w-full p-2 border-t border-zinc-700">
             <h2 class="text-base font-semibold">{{ alumno.nombre }}</h2>
         </div>
