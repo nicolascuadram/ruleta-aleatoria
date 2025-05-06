@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Equipos from "../../components/Equipos.vue";
+import CrearEquipos from "../../components/CrearEquipos.vue";
 
 // Obtener el parámetro id de la URL
 const { id } = Astro.params as { id: string };
@@ -79,6 +80,7 @@ export async function getStaticPaths() {
 
 <Layout>
 	<div class="flex justify-between items-start w-full h-full">
+		
 		<div class="basis-1/4 grow h-full">
 			<!-- Lista de Equipos de la Instancia -->
 			<Equipos id={id} client:load />
@@ -88,6 +90,8 @@ export async function getStaticPaths() {
 		</div>
 		<div class="basis-1/4 grow h-full">
 			<!-- Detalles o Configuraciones de la Ruleta -->
+			<CrearEquipos id={id} client:load />
 		</div>
 	</div>
 </Layout>
+
