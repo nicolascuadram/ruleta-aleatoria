@@ -2,7 +2,6 @@
 import Navbar from "../components/Navbar.vue";
 import Footer from "../components/Footer.vue";
 import "@fontsource-variable/inter";
-import "../styles/global.css";
 ---
 
 <!doctype html>
@@ -27,6 +26,8 @@ import "../styles/global.css";
 </html>
 
 <style is:global>
+	@import "tailwindcss";
+
 	body {
 		font-family: "Inter Variable", sans-serif;
 	}
