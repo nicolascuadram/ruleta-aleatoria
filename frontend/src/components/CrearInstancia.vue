@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, onUnmounted, watch } from 'vue';
 const API_URL = import.meta.env.PUBLIC_API_URL;
 
 /* LÓGICA DEL MODAL */
@@ -51,6 +51,17 @@ onUnmounted(() => {
 
 const semestre = ref('');
 
+// Generar opciones de semestre para el año actual y el siguiente
+const currentYear = new Date().getFullYear();
+const semestreOptions = computed(() => {
+    return [
+        `${currentYear}-1`,
+        `${currentYear}-2`,
+        `${currentYear + 1}-1`,
+        `${currentYear + 1}-2`,
+    ];
+});
+
 // Función para crear una nueva instancia
 const postInstancia = async () => {
     try {
@@ -95,8 +106,12 @@ const updateInstancias = (instancia) => {
                 </header>
                 <div class="flex flex-col items-start w-full gap-1">
                     <label for="semestre" class="block text-sm font-bold">Semestre</label>
-                    <input type="text" id="semestre" v-model="semestre" required
-                        class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1" />
+                    <select id="semestre" v-model="semestre" required class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-white outline-none">
+                        <option value="" disabled selected>Selecciona un semestre</option>
+                        <option v-for="option in semestreOptions" :key="option" :value="option">
+                            {{ option }}
+                        </option>
+                    </select>
                 </div>
                 <div class="flex justify-end items-center w-full gap-4">
                     <button
@@ -114,3 +129,54 @@ const updateInstancias = (instancia) => {
         </div>
     </section>
 </template>
+
+<style scoped>
+/* Habilitar estilos personalizables para el select (Chrome) */
+select {
+    &, &::picker(select) {
+        appearance: base-select;
+    }
+}
+
+/* Estilos del select */
+::picker(select) {
+    background-color: #18181b;
+    color: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #3f3f46;
+    top: calc(anchor(bottom) + 2px);
+}
+
+/* Icono del select */
+select::picker-icon {
+    width: 24px;
+    height: 24px;
+    content: url("../assets/chevron-down.svg");
+    transition: 0.3s rotate;
+}
+
+select:open::picker-icon {
+  rotate: 180deg;
+}
+
+/* Estilos de las opciones del select */
+select option {
+    background-color: #18181b;
+    color: #ffffff;
+    padding: 4px 8px;
+}
+
+select option:checked, select option:hover {
+    background-color: #fafafa;
+    color: #18181b;
+}
+
+select option:disabled {
+    background-color: #18181b;
+    color: #3f3f46;
+}
+
+option::checkmark {
+    display: none;
+}
+</style>
