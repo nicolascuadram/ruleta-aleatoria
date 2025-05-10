@@ -5,17 +5,6 @@ import CrearEquipos from "../../components/CrearEquipos.vue";
 
 // Obtener el parámetro id de la URL
 const { id } = Astro.params as { id: string };
-
-// Función para generar rutas
-export async function getStaticPaths() {
-	const API_URL = import.meta.env.PUBLIC_API_URL;
-	const res = await fetch(API_URL + `/api/instancias/`);
-	const instancias = await res.json();
-
-	return instancias.map((instancia: any) => ({
-		params: { id: instancia.id.toString() },
-	}));
-}
 ---
 
 <Layout>
