@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Equipos from "../../components/Equipos.vue";
+import Ejecucion from "../../components/Ejecucion.vue";
 import CrearEquipos from "../../components/CrearEquipos.vue";
 
 // Obtener el parámetro id de la URL
@@ -17,6 +18,7 @@ const { id } = Astro.params as { id: string };
 		<!-- Lado Central -->
 		<div class="basis-2/4 grow h-full">
 			<!-- Ruleta Aleatoria -->
+			<Ejecucion client:load />
 		</div>
 		<!-- Lado Derecho -->
 		<div class="basis-1/4 grow h-full">
