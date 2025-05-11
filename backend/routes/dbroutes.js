@@ -130,18 +130,25 @@ router.post('/incidencias', async (req, res) => {
     }
 });
 
-router.post('/registros', async (req, res) => {
+router.get('/registros/:id', async(req, res) => {
+   try {
+       const { id } = req.params;
+       const result = await pool.query(getQueries.GetRegistrosByInstancia, [id]);
+       res.json(result.rows);
+   } catch (error) {
+        res.status(500).json({error: "Error al obtener los registros"});
+   }
+})
+
+
+router.get('/historial', async (req, res) => {
     try {
-        const { ref_incidencia, ref_grupo, alumnoescogido, comentario } = req.body;
-        const result = await pool.query(postQueries.AddRegistro, [ref_incidencia, ref_grupo, alumnoescogido, comentario]);
-        res.status(201).json(result.rows[0]);
+        const result = await pool.query(getQueries.GetHistorialRuleta); 
+        res.json(result.rows);
     } catch (error) {
-        res.status(500).json({ error: "Error al crear el registro" });
+        res.status(500).json({ error: "Error al obtener el historial de la ruleta" });
     }
 });
-
-
-
 
 
 export default router;
