@@ -1,21 +1,11 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Equipos from "../../components/Equipos.vue";
+import Ejecucion from "../../components/Ejecucion.vue";
 import CrearEquipos from "../../components/CrearEquipos.vue";
 
 // Obtener el parámetro id de la URL
 const { id } = Astro.params as { id: string };
-
-// Función para generar rutas
-export async function getStaticPaths() {
-	const API_URL = import.meta.env.PUBLIC_API_URL;
-	const res = await fetch(API_URL + `/api/instancias/`);
-	const instancias = await res.json();
-
-	return instancias.map((instancia: any) => ({
-		params: { id: instancia.id.toString() },
-	}));
-}
 ---
 
 <Layout>
@@ -28,6 +18,7 @@ export async function getStaticPaths() {
 		<!-- Lado Central -->
 		<div class="basis-2/4 grow h-full">
 			<!-- Ruleta Aleatoria -->
+			<Ejecucion client:load />
 		</div>
 		<!-- Lado Derecho -->
 		<div class="basis-1/4 grow h-full">
