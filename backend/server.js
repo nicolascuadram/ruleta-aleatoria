@@ -9,9 +9,13 @@ app.use(express.json());
 app.use(cors({ origin: '*', credentials: true }));
 app.use('/api', router);
 
+app.get('/', (req, res) => {
+    res.send('API de la Ruleta Aleatoria'); 
+});
+
 app.get('/health', (req, res) => {
     res.send('OK'); 
-})
+});
 
 app.get('/dbhealth', async (req, res) => {
   try {
@@ -25,5 +29,5 @@ app.get('/dbhealth', async (req, res) => {
 
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+  console.log(`Servidor escuchando en el puerto: ${PORT}`);
 });
