@@ -1,0 +1,5 @@
+PGHOST=localhost
+PGUSER=tu-usuario
+PGPASSWORD=tu-contraseña
+PGDATABASE=tu-basededatos
+PGPORT=5432
