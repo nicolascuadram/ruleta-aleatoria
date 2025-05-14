@@ -58,64 +58,64 @@ export default {
       });
     },
     finishScroll() {
-  const ring = document.querySelector('#ring1');
-  const items = ring.querySelectorAll('.item');
+      const ring = document.querySelector('#ring1');
+      const items = ring.querySelectorAll('.item');
 
-  let winningItem = null;
-  let maxArea = 0;
+      let winningItem = null;
+      let maxArea = 0;
 
-  items.forEach(item => {
-    const rect = item.getBoundingClientRect();
+      items.forEach(item => {
+        const rect = item.getBoundingClientRect();
 
-    // Filtrar ítems completamente fuera de pantalla (o invisibles)
-    if (rect.width === 0 || rect.height === 0) return;
-    if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+        // Filtrar ítems completamente fuera de pantalla (o invisibles)
+        if (rect.width === 0 || rect.height === 0) return;
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
 
-    // Calcular el área visible como aproximación de "visibilidad frontal"
-    const area = rect.width * rect.height;
+        // Calcular el área visible como aproximación de "visibilidad frontal"
+        const area = rect.width * rect.height;
 
-    if (area > maxArea) {
-      maxArea = area;
-      winningItem = item;
-    }
-  });
+        if (area > maxArea) {
+          maxArea = area;
+          winningItem = item;
+        }
+      });
 
-  // Mostrar resultado
-  const textcontent = document.getElementById('textcontent');
-  if (winningItem) {
-    textcontent.innerHTML = `<p>Resultado: ${winningItem.dataset.content}</p>`;
-    items.forEach(item => item.classList.remove('active'));
-    winningItem.classList.add('active');
-  } else {
-    textcontent.innerHTML = `<p>No se pudo determinar el resultado</p>`;
-  }
-},
+      // Mostrar resultado
+      const textcontent = document.getElementById('textcontent');
+      if (winningItem) {
+        textcontent.innerHTML = `<p>Resultado: ${winningItem.dataset.content}</p>`;
+        items.forEach(item => item.classList.remove('active'));
+        winningItem.classList.add('active');
+      } else {
+        textcontent.innerHTML = `<p>No se pudo determinar el resultado</p>`;
+      }
+    },  
     spinWheels() {
-  const itemCount = this.items.length;
-  const anglePerItem = 360 / itemCount;
+      const itemCount = this.items.length;
+      const anglePerItem = 360 / itemCount;
 
-  const textcontent = document.getElementById('textcontent');
-  textcontent.innerHTML = '<p>Cargando...</p>';
+      const textcontent = document.getElementById('textcontent');
+      textcontent.innerHTML = '<p>Cargando...</p>';
 
-  document.querySelector('.stage').classList.remove('notstarted');
-  document.querySelectorAll('.ring:not(.held) .item').forEach(item => {
-    item.classList.remove('active');
-  });
+      document.querySelector('.stage').classList.remove('notstarted');
+      document.querySelectorAll('.ring:not(.held) .item').forEach(item => {
+        item.classList.remove('active');
+      });
 
-  // Gira de forma aleatoria pero en múltiplos del ángulo por ítem
-  const fullRotations = 5;
-  const targetIndex = Math.floor(Math.random() * itemCount);
-  const targetAngle = fullRotations * 360 + targetIndex * anglePerItem;
+      // Gira de forma aleatoria pero en múltiplos del ángulo por ítem
+      const fullRotations = 5;
+      const targetIndex = Math.floor(Math.random() * itemCount);
+      const targetAngle = fullRotations * 360 + targetIndex * anglePerItem;
 
-  const scrollcells = gsap.timeline({ paused: true, onComplete: this.finishScroll })
-    .to('#ring1:not(.held)', {
-      rotationX: `+=${targetAngle}`,
-      duration: 2,
-      ease: 'power3',
-    }, "<");
+      const scrollcells = gsap.timeline({ paused: true, onComplete: this.finishScroll })
+        .to('#ring1:not(.held)', {
+          rotationX: `+=${targetAngle}`,
+          duration: 2,
+          ease: 'power3',
+        }, "<");
 
-  scrollcells.play();
-},
+      scrollcells.play();
+    },
   }
 }
 </script>
@@ -291,5 +291,4 @@ ul {
   z-index: 100;
   pointer-events: none;
 }
-
 </style>
