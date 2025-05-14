@@ -16,80 +16,22 @@ export async function getStaticPaths() {
 	return instancias.map((instancia: any) => ({
 		params: { id: instancia.id.toString() },
 	}));
-
-	// Si no se puede acceder a la API, puedes usar datos de ejemplo como los siguientes:
-	/* const instancias = {
-		value: [
-			{
-				id: 1,
-				semestre: "2025-1",
-				profesor: "Luis Silvestre",
-			},
-			{
-				id: 2,
-				semestre: "2025-2",
-				profesor: "Luis Silvestre",
-			},
-			{
-				id: 3,
-				semestre: "2026-1",
-				profesor: "Luis Silvestre",
-			},
-			{
-				id: 4,
-				semestre: "2026-1",
-				profesor: "Luis Silvestre",
-			},
-			{
-				id: 5,
-				semestre: "2026-1",
-				profesor: "Luis Silvestre",
-			},
-			{
-				id: 6,
-				semestre: "2026-1",
-				profesor: "Luis Silvestre",
-			},
-			{
-				id: 7,
-				semestre: "2026-1",
-				profesor: "Luis Silvestre",
-			},
-			{
-				id: 8,
-				semestre: "2026-1",
-				profesor: "Luis Silvestre",
-			},
-			{
-				id: 9,
-				semestre: "2026-1",
-				profesor: "Luis Silvestre",
-			},
-			{
-				id: 10,
-				semestre: "2026-1",
-				profesor: "Luis Silvestre",
-			},
-		],
-	};
-
-	return instancias.value.map((instancia: any) => ({
-		params: { id: instancia.id.toString() },
-	})); */
 }
 ---
 
 <Layout>
 	<div class="flex justify-between items-start w-full h-full">
-		
+		<!-- Lado Izquierdo -->
 		<div class="basis-1/4 grow h-full">
 			<!-- Lista de Equipos de la Instancia -->
 			<Equipos id={id} client:load />
 		</div>
+		<!-- Lado Central -->
 		<div class="basis-2/4 grow h-full">
 			<!-- Ruleta Aleatoria -->
 			<Ruleta client:load></Ruleta>
 		</div>
+		<!-- Lado Derecho -->
 		<div class="basis-1/4 grow h-full">
 			<!-- Detalles o Configuraciones de la Ruleta -->
 			<CrearEquipos id={id} client:load />

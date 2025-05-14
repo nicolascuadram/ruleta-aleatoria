@@ -1,10 +1,11 @@
 <script setup>
+import { ref, onMounted } from 'vue';
 import CardInstancia from './CardInstancia.vue';
 import CrearInstancia from './CrearInstancia.vue';
-import { ref, onMounted } from 'vue';
 
 const API_URL = import.meta.env.PUBLIC_API_URL;
 const instancias = ref([]);
+const showModalCrear = ref(false);
 
 // Función para obtener las instancias desde la API
 const getInstancias = async () => {
@@ -28,12 +29,12 @@ const getInstancias = async () => {
     }
 };
 
+// Función para actualizar la lista de instancias después de crear una nueva
 const updateInstancias = (instancia) => {
     instancias.value.push(instancia);
 };
 
-const showModalCrear = ref(false);
-
+// Función para mostrar/ocultar el modal de creación de instancia
 const toggleModalCrear = () => {
     showModalCrear.value = !showModalCrear.value;
 };
@@ -41,60 +42,6 @@ const toggleModalCrear = () => {
 onMounted(() => {
     getInstancias();
 });
-
-// Simulación de datos para instancias
-/* instancias.value = [
-    {
-        id: 1,
-        semestre: '2025-1',
-        profesor: 'Luis Silvestre',
-    },
-    {
-        id: 2,
-        semestre: '2025-2',
-        profesor: 'Luis Silvestre',
-    },
-    {
-        id: 3,
-        semestre: '2026-1',
-        profesor: 'Luis Silvestre',
-    },
-    {
-        id: 4,
-        semestre: '2026-1',
-        profesor: 'Luis Silvestre',
-    },
-    {
-        id: 5,
-        semestre: '2026-1',
-        profesor: 'Luis Silvestre',
-    },
-    {
-        id: 6,
-        semestre: '2026-1',
-        profesor: 'Luis Silvestre',
-    },
-    {
-        id: 7,
-        semestre: '2026-1',
-        profesor: 'Luis Silvestre',
-    },
-    {
-        id: 8,
-        semestre: '2026-1',
-        profesor: 'Luis Silvestre',
-    },
-    {
-        id: 9,
-        semestre: '2026-1',
-        profesor: 'Luis Silvestre',
-    },
-    {
-        id: 10,
-        semestre: '2026-1',
-        profesor: 'Luis Silvestre',
-    },
-]; */
 </script>
 
 <template>
