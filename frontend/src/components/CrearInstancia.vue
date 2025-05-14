@@ -1,26 +1,66 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, onUnmounted, watch } from 'vue';
 const API_URL = import.meta.env.PUBLIC_API_URL;
+
+/* LÓGICA DEL MODAL */
 
 // Recibe la propiedad isModalOpen
 const props = defineProps({
     isModalOpen: Boolean
 });
 
-const semestre = ref('');
-
 // Emitir eventos
 const emit = defineEmits(['close-modal', 'update:instancias']);
+
+// Referencia al modal
+const modalContentRef = ref(null);
 
 // Función para cerrar el modal
 const closeModal = () => {
     emit('close-modal');
 };
 
-// Función para actualizar las instancias
-const updateInstancias = (instancia) => {
-    emit('update:instancias', instancia);
+// Cerrar el modal con la tecla Escape
+const handleEscape = (e) => {
+    if (e.key === 'Escape') closeModal();
 };
+
+// Cerrar al hacer clic fuera del modal
+const handleClickOutside = (e) => {
+    if (modalContentRef.value && !modalContentRef.value.contains(e.target)) {
+        closeModal();
+    }
+};
+
+watch(() => props.isModalOpen, (isOpen) => {
+    if (isOpen) {
+        window.addEventListener('keydown', handleEscape);
+        window.addEventListener('mousedown', handleClickOutside);
+    } else {
+        window.removeEventListener('keydown', handleEscape);
+        window.removeEventListener('mousedown', handleClickOutside);
+    }
+});
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleEscape);
+    window.removeEventListener('mousedown', handleClickOutside);
+});
+
+/* LÓGICA DEL COMPONENTE ESPECÍFICO */
+
+const semestre = ref('');
+
+// Generar opciones de semestre para el año actual y el siguiente
+const currentYear = new Date().getFullYear();
+const semestreOptions = computed(() => {
+    return [
+        `${currentYear}-1`,
+        `${currentYear}-2`,
+        `${currentYear + 1}-1`,
+        `${currentYear + 1}-2`,
+    ];
+});
 
 // Función para crear una nueva instancia
 const postInstancia = async () => {
@@ -49,20 +89,29 @@ const postInstancia = async () => {
         console.error("Error posting instancia:", err);
     }
 };
+
+// Función para actualizar las instancias
+const updateInstancias = (instancia) => {
+    emit('update:instancias', instancia);
+};
 </script>
 
 <template>
-    <div v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-[#000000dd] z-50">
-        <div class="flex flex-col justify-center items-center rounded-md px-6 py-4 bg-zinc-950 border border-zinc-700">
+    <section role="dialog" aria-modal="true" v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-[#000000dd] z-50">
+        <div ref="modalContentRef" class="flex flex-col justify-center items-center rounded-md px-6 py-4 bg-zinc-950 border border-zinc-700">
             <form @submit.prevent="postInstancia" class="flex flex-col justify-center items-center gap-4">
-                <div class="flex flex-col w-full text-start gap-1">
+                <header class="flex flex-col w-full text-start gap-1">
                     <h2 class="text-xl font-bold">Nueva Instancia</h2>
                     <p class="text-sm">Selecciona un semestre para crear una nueva instancia.</p>
-                </div>
+                </header>
                 <div class="flex flex-col items-start w-full gap-1">
                     <label for="semestre" class="block text-sm font-bold">Semestre</label>
-                    <input type="text" id="semestre" v-model="semestre" required
-                        class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1" />
+                    <select id="semestre" v-model="semestre" required class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-white outline-none">
+                        <option value="" disabled selected>Selecciona un semestre</option>
+                        <option v-for="option in semestreOptions" :key="option" :value="option">
+                            {{ option }}
+                        </option>
+                    </select>
                 </div>
                 <div class="flex justify-end items-center w-full gap-4">
                     <button
@@ -78,5 +127,56 @@ const postInstancia = async () => {
                 </div>
             </form>
         </div>
-    </div>
+    </section>
 </template>
+
+<style scoped>
+/* Habilitar estilos personalizables para el select (Chrome) */
+select {
+    &, &::picker(select) {
+        appearance: base-select;
+    }
+}
+
+/* Estilos del select */
+::picker(select) {
+    background-color: #18181b;
+    color: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #3f3f46;
+    top: calc(anchor(bottom) + 2px);
+}
+
+/* Icono del select */
+select::picker-icon {
+    width: 24px;
+    height: 24px;
+    content: url("../assets/chevron-down.svg");
+    transition: 0.3s rotate;
+}
+
+select:open::picker-icon {
+  rotate: 180deg;
+}
+
+/* Estilos de las opciones del select */
+select option {
+    background-color: #18181b;
+    color: #ffffff;
+    padding: 4px 8px;
+}
+
+select option:checked, select option:hover {
+    background-color: #fafafa;
+    color: #18181b;
+}
+
+select option:disabled {
+    background-color: #18181b;
+    color: #3f3f46;
+}
+
+option::checkmark {
+    display: none;
+}
+</style>
