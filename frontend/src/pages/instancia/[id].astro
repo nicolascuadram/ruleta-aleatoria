@@ -4,6 +4,7 @@ import Equipos from "../../components/Equipos.vue";
 import Ejecucion from "../../components/Ejecucion.vue";
 import CrearEquipos from "../../components/CrearEquipos.vue";
 import Ruleta from "../../components/Ruleta2Aleatoria.vue";
+import Historial from "../../components/Historial.vue";
 
 // Obtener el parámetro id de la URL
 const { id } = Astro.params as { id: string };
@@ -24,7 +25,10 @@ const { id } = Astro.params as { id: string };
 		<!-- Lado Derecho -->
 		<div class="basis-1/4 grow h-full">
 			<!-- Detalles o Configuraciones de la Ruleta -->
-			<CrearEquipos id={id} client:load />
+			<div class="flex justify-between items-center w-full p-4">
+				<CrearEquipos id={id} client:load />
+				<Historial id={id} client:load />
+			</div>
 		</div>
 	</div>
 </Layout>
