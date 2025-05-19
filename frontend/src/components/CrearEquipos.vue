@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
-    <div class="flex flex-col items-center w-full p-4 z-0">
-      <div class="flex flex-row items-center justify-end space-x-4 w-full">
+    <div class="flex flex-col items-start z-0">
+      <div class="flex flex-row items-center justify-end">
         <!-- <div  v-if="!hasGroups">
           <h1>Subir equipos:</h1>
         </div>
@@ -10,14 +10,14 @@
         <!-- <h1 class="text-nowrap">Agregar mas equipos:</h1>
         </div> -->
         <label
-          class="bg-white text-black border border-gray-300 px-4 py-2 rounded cursor-pointer hover:bg-gray-100 text-nowrap">
+          class="bg-zinc-50 text-zinc-900 font-medium px-4 py-2 rounded-md cursor-pointer hover:bg-zinc-300 transition duration-300 shadow-md text-nowrap">
           Subir archivo CSV
           <input type="file" @change="handleFileChange" accept=".csv" class="hidden" />
         </label>
       </div>
-      <div class="mt-4 text-sm text-gray-300 text-center min-h-[1.25rem]">
+      <!-- <div class="mt-4 text-sm text-gray-300 text-center min-h-[1.25rem]">
         <p>{{ uploadStatus }}</p>
-      </div>
+      </div> -->
     </div>
     <!--Modal-->
     <div role="dialog" aria-modal="true" v-if="showModal"
