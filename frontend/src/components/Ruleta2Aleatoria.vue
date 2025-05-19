@@ -36,7 +36,6 @@ export default {
     return {
       seed: Date.now(),
       items: ['Organizacional','Operativo','Tecnológico','Proyecto','Personal',
-              'Organizacional','Operativo','Tecnológico','Proyecto','Personal',
               'Organizacional','Operativo','Tecnológico','Proyecto','Personal']
     }
   },
@@ -57,7 +56,7 @@ export default {
       const itemCount = this.items.length;
       const anglePerItem = 360 / itemCount;
 
-      gsap.set(".ring", { rotationX: 0 });
+      gsap.set(".ring", { rotationX: -90 });
       gsap.set(".item", {
         rotateX: (i) => (i * -anglePerItem),
         transformOrigin: "50% 50% -220px",
