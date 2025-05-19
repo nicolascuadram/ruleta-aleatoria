@@ -243,7 +243,7 @@ ul {
 .item {
   position: absolute;
   width: 100%;
-  height: 47%;
+  height: 70%;
   display: flex;
   justify-content: center;
   align-items: center;
