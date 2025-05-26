@@ -161,6 +161,24 @@ router.get('/historial', async (req, res) => {
     }
 });
 
+router.post('/ruleta', async (req, res) => {
+    try {
+        const { resultado } = req.body;
+        const insertQuery = 'INSERT INTO resultados_ruleta(resultado, fecha) VALUES($1, NOW()) RETURNING *';
+        const result = await pool.query(insertQuery, [resultado]);
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error('Error al guardar resultado de ruleta:', error);
+        res.status(500).json({ error: "Error al guardar el resultado de la ruleta" });
+    }
+});
+
+router.get('/ruleta', (req, res) => {
+  res.send('Esta ruta solo acepta POST para guardar resultados.');
+});
+
+
+
 
 
 export default router;
