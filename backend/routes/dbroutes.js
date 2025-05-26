@@ -21,6 +21,17 @@ router.get('/incidencias', async(req, res) => {
         res.status(500).json({error: "Error al obtener las incidencias"});
    }
 })
+
+router.get('/incidencias/:id', async(req, res) => {
+   try {
+       const { id } = req.params;
+       const result = await pool.query(getQueries.GetIncidenciasByInstancia, [id]);
+       res.json(result.rows);
+   } catch (error) {
+        res.status(500).json({error: "Error al obtener las incidencias"});
+   }
+})
+
 router.get('/categorias', async(req, res) => {
    try {
        const result = await pool.query(getQueries.GetCategories);
@@ -122,8 +133,8 @@ router.post('/alumnos', async (req, res) => {
 
 router.post('/incidencias', async (req, res) => {
     try {
-        const { categoria, descripcion, alumno } = req.body;
-        const result = await pool.query(postQueries.AddIncidencia, [categoria, descripcion, alumno]);
+        const { ref_instancia,categoria, subcategoria} = req.body;
+        const result = await pool.query(postQueries.AddIncidencia, [ref_instancia, categoria, subcategoria]);
         res.status(201).json(result.rows[0]);
     } catch (error) {
         res.status(500).json({ error: "Error al crear la incidencia" });
@@ -149,6 +160,7 @@ router.get('/historial', async (req, res) => {
         res.status(500).json({ error: "Error al obtener el historial de la ruleta" });
     }
 });
+
 
 
 export default router;

@@ -18,9 +18,9 @@ ref_grupo integer references grupo(id) on update cascade on delete cascade
 
 create table if not exists incidencia(
 id serial primary key,
+ref_instancia integer references instancia(id) on update cascade on delete cascade,
 categoria text not null,
-descripcion text,
-alumno boolean
+subcategoria text not null
 );
 
 create table if not exists registro(
@@ -28,6 +28,8 @@ id serial primary key,
 ref_incidencia integer references incidencia(id) on update cascade on delete cascade,
 ref_grupo integer references grupo(id) on update cascade on delete cascade,
 alumnoescogido text,
+grupo_intercambio integer references grupo(id) on update cascade on delete cascade,
+alumno_intercambio text,
 fecha timestamp,
 comentario text
 );
@@ -49,6 +51,8 @@ INSERT INTO alumno (nombre, ref_grupo) VALUES
 ('Tomás Vidal', 3),
 ('Valentina Díaz', 3);
 
+
+/*
 INSERT INTO incidencia (categoria, descripcion, alumno) VALUES
 ('Pausa grupal', 'El grupo no trabaja esta semana', false),
 ('Sin herramientas', 'El grupo no puede usar computador esta semana', false),
@@ -64,3 +68,4 @@ INSERT INTO registro (ref_incidencia, ref_grupo, alumnoescogido, fecha, comentar
 (4, 2, 'María Ríos', CURRENT_TIMESTAMP, 'María cambia su rol de lider a programadora'),
 (5, 3, NULL, CURRENT_TIMESTAMP, 'Grupo Gamma tendrá entrega doble esta semana');
 
+*/
