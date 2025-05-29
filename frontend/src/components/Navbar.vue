@@ -6,8 +6,7 @@
         </div>
         <!-- Lado derecho -->
         <div class="flex justify-center items-center gap-4">
-            <a href="/" class="font-medium text-md">About</a>
-            <a href="/" class="font-medium text-md">Contact</a>
+            <a href="/instancias" class="font-medium text-md">Instancias</a>
         </div>
     </nav>
 </template>
