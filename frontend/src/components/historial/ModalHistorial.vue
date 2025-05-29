@@ -59,7 +59,7 @@ const registros = ref(null);
 // Función para obtener los registros del historial
 const getHistorial = async () => {
     try {
-        const response = await fetch(API_URL + `/api/registros/${props.id}`, {
+        const response = await fetch(`${API_URL}/api/registros/${props.id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -68,7 +68,7 @@ const getHistorial = async () => {
         if (!response.ok) {
             console.error("Status:", response.status);
             throw new Error(
-                "Error en la respuesta del servidor: " + response.statusText
+                `Error en la respuesta del servidor: ${response.statusText}`
             );
         }
         const data = await response.json();

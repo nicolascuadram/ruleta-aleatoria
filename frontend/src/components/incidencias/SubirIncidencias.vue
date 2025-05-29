@@ -64,7 +64,7 @@ export default{
         console.log(this.parsedExcel);
         this.showModal = true;
       }catch (error){
-        alert('Error al procesar el archivo: ' + error.message);
+        alert(`Error al procesar el archivo: ${error.message}`);
         console.error(error);
       }
     },
@@ -80,7 +80,7 @@ export default{
 
       const expectedHeaders = ['categoria', 'subcategoria'];
       if(JSON.stringify(headers) !== JSON.stringify(expectedHeaders)){
-        throw new Error('El archivo debe contener las columnas exactas: ' + expectedHeaders.join(', '));
+        throw new Error(`El archivo debe contener las columnas exactas: ${expectedHeaders.join(', ')}`);
       }
 
       const rows = [];
@@ -124,7 +124,7 @@ export default{
         //console.log("Categoría:", item.categoria);
         //console.log("Categoría:", item.subcategoria);
         try{
-          const response = await fetch(API_URL + '/api/incidencias',{
+          const response = await fetch(`${API_URL}/api/incidencias`,{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

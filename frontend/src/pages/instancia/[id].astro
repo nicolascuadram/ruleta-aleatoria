@@ -1,37 +1,11 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import Equipos from "../../components/Equipos.vue";
-import Ejecucion from "../../components/Ejecucion.vue";
-import CrearEquipos from "../../components/CrearEquipos.vue";
-import Ruleta from "../../components/Ruleta2Aleatoria.vue";
-import Historial from "../../components/Historial.vue";
-import SubirIncidencias from "../../components/SubirIncidencias.vue";
+import Instancia from "../../components/instancias/Instancia.vue";
 
 // Obtener el parámetro id de la URL
 const { id } = Astro.params as { id: string };
 ---
 
 <Layout>
-	<div class="flex justify-between items-start w-full h-full">
-		<!-- Lado Izquierdo -->
-		<div class="basis-1/4 grow h-full">
-			<!-- Lista de Equipos de la Instancia -->
-			<Equipos id={id} client:load />
-		</div>
-		<!-- Lado Central -->
-		<div class="basis-2/4 grow h-full">
-			<!-- Ruleta Aleatoria -->
-			<Ruleta client:load></Ruleta>
-		</div>
-		<!-- Lado Derecho -->
-		<div class="basis-1/4 grow h-full">
-			<!-- Detalles o Configuraciones de la Ruleta -->
-			<div class="flex justify-between items-center w-full p-4">
-				<CrearEquipos id={id} client:load />
-				<SubirIncidencias id={id} client:load ></SubirIncidencias>
-				<Historial id={id} client:load />
-			</div>
-		</div>
-	</div>
+	<Instancia id={id} client:load />
 </Layout>
-
