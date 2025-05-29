@@ -26,7 +26,7 @@ const { id } = Astro.params as { id: string };
 		<!-- Lado Derecho -->
 		<div class="basis-1/4 grow h-full">
 			<!-- Detalles o Configuraciones de la Ruleta -->
-			<div class="flex justify-between items-center w-full p-4">
+			<div class="flex flex-wrap justify-start items-center w-full p-4 gap-2">
 				<CrearEquipos id={id} client:load />
 				<SubirIncidencias id={id} client:load ></SubirIncidencias>
 				<Historial id={id} client:load />
