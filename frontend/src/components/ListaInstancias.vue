@@ -10,7 +10,7 @@ const showModalCrear = ref(false);
 // Función para obtener las instancias desde la API
 const getInstancias = async () => {
     try {
-        const response = await fetch(API_URL + `/api/instancias/`, {
+        const response = await fetch(`${API_URL}/api/instancias/`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -19,7 +19,7 @@ const getInstancias = async () => {
         if (!response.ok) {
             console.error("Status:", response.status);
             throw new Error(
-                "Error en la respuesta del servidor: " + response.statusText
+                `Error en la respuesta del servidor: ${response.statusText}`
             );
         }
         const data = await response.json();
