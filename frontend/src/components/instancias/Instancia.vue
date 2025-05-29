@@ -1,9 +1,9 @@
 <script setup>
-import Equipos from "./equipos/Equipos.vue";
-import CrearEquipos from "./equipos/CrearEquipos.vue";
-import Ruleta from "./ruleta/Ruleta2Aleatoria.vue";
-import Historial from "./historial/Historial.vue";
-import SubirIncidencias from "./incidencias/SubirIncidencias.vue";
+import Equipos from "../equipos/Equipos.vue";
+import CrearEquipos from "../equipos/CrearEquipos.vue";
+import Ruleta from "../ruleta/Ruleta2Aleatoria.vue";
+import Historial from "../historial/Historial.vue";
+import SubirIncidencias from "../incidencias/SubirIncidencias.vue";
 
 const props = defineProps({
     id: {
