@@ -15,7 +15,7 @@ const equipos = ref(null);
 // Función para obtener los equipos de la instancia desde la API
 const getEquipos = async () => {
     try {
-        const response = await fetch(API_URL + `/api/instancias/${props.id}`, {
+        const response = await fetch(`${API_URL}/api/instancias/${props.id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -24,7 +24,7 @@ const getEquipos = async () => {
         if (!response.ok) {
             console.error("Status:", response.status);
             throw new Error(
-                "Error en la respuesta del servidor: " + response.statusText
+                `Error en la respuesta del servidor: ${response.statusText}`
             );
         }
         const data = await response.json();

@@ -83,7 +83,7 @@ export default{
   methods:{
     async fetchGruposPorInstancia(){
       try{
-        const response = await fetch(API_URL + `/api/instancias/${this.id}`);
+        const response = await fetch(`${API_URL}/api/instancias/${this.id}`);
         if(!response.ok) throw new Error('Failed to fetch instance');
         const data = await response.json();
         this.hasGroups = Array.isArray(data) && data.length > 0;
@@ -110,7 +110,7 @@ export default{
         //console.log(this.groupedPreview);
         this.showModal = true;
       } catch (error) {
-        alert('Error al procesar el archivo: ' + error.message);
+        alert(`Error al procesar el archivo: ${error.message}`);
         console.error(error);
       }
     },
@@ -126,7 +126,7 @@ export default{
 
       const expectedHeaders =['Grupo', 'Proyecto1', 'Proyecto2', 'NumIntegrantes', 'Integrante1', 'Integrante2', 'Integrante3', 'Integrante4', 'Integrante5', 'Integrante6'];
       if(JSON.stringify(headers) !== JSON.stringify(expectedHeaders)){
-        throw new Error('El archivo debe contener las columnas exactas: ' + expectedHeaders.join(', '));
+        throw new Error(`El archivo debe contener las columnas exactas: ${expectedHeaders.join(', ')}`);
       }
       const rows = [];
       worksheet.eachRow((row, rowIndex) =>{
@@ -208,7 +208,7 @@ export default{
         if(!gruposCreados[item.grupo]){
           const groupData = {
             ref_instancia: this.id,
-            nombre: "Grupo "+item.grupo,
+            nombre: `Grupo ${item.grupo}`,
           };
           const nuevoGrupo = await this.createGroup(groupData);
           grupoId = nuevoGrupo.id;
@@ -226,7 +226,7 @@ export default{
     },
 
     async createGroup(groupData){
-      const response = await fetch(API_URL+'/api/grupos',{
+      const response = await fetch(`${API_URL}/api/grupos`,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(groupData),
@@ -235,7 +235,7 @@ export default{
     },
 
     async createAlumno(alumnoData){
-      const response = await fetch(API_URL+'/api/alumnos',{
+      const response = await fetch(`${API_URL}/api/alumnos`,{
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(alumnoData),
