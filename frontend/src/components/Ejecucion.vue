@@ -3,13 +3,6 @@ import { ref, onMounted } from 'vue'
 const API_URL = import.meta.env.PUBLIC_API_URL;
 
 // Props y Emits
-const props = defineProps({
-    /* id_equipo: {
-        type: String,
-        required: true
-    }, */
-});
-
 const emit = defineEmits(['update:roulette_content']);
 
 const updateRouletteContent = (roulette_content) => {
@@ -34,7 +27,7 @@ const getIncidencias = async () => {
             throw new Error(
                 `Error en la respuesta del servidor: ${response.statusText}`
             );
-        }
+        };
         const data = await response.json();
         incidencias.value = data;
 		categorias.value = [...new Set(data.map(i => i.categoria))];
@@ -44,13 +37,14 @@ const getIncidencias = async () => {
     }
 };
 
+// Función para obtener las subcategorías de una categoría
 function getSubcategorias(categoria) {
-	return incidencias.value.filter(i => i.categoria === categoria)
-}
+	return incidencias.value.filter(i => i.categoria === categoria);
+};
 
 // Algoritmo Xorshift
 function xorshift() {
-	const seed = ref(Date.now())
+	const seed = ref(Date.now());
 	const min = 1;
 	const max = 1000;
 	let x = seed.value >>> 0
@@ -59,24 +53,24 @@ function xorshift() {
 	x ^= x << 5
 	const normalized = (x >>> 0) / 2 ** 32;
 	return Math.floor(min + normalized * (max - min + 1));
-}
+};
 
-const categoriaSeleccionada = ref(null)
-const incidenciaSeleccionada = ref(null)
+const categoriaSeleccionada = ref(null);
+const incidenciaSeleccionada = ref(null);
 
 // Función para generar categoría e incidencia aleatoria
 function generarIncidenciaAleatoria() {
 	// Elegir categoría aleatoria
-	const indiceCategoria = xorshift() % categorias.value.length
-	categoriaSeleccionada.value = categorias.value[indiceCategoria]
+	const indiceCategoria = xorshift() % categorias.value.length;
+	categoriaSeleccionada.value = categorias.value[indiceCategoria];
 
 	// Filtrar incidencias por categoría
-	const incidenciasPorCategoria = getSubcategorias(categoriaSeleccionada.value)
+	const incidenciasPorCategoria = getSubcategorias(categoriaSeleccionada.value);
 
 	// Elegir una incidencia aleatoria dentro de esa categoría
-	const indiceIncidencia = xorshift() % incidenciasPorCategoria.length
-	incidenciaSeleccionada.value = incidenciasPorCategoria[indiceIncidencia]
-}
+	const indiceIncidencia = xorshift() % incidenciasPorCategoria.length;
+	incidenciaSeleccionada.value = incidenciasPorCategoria[indiceIncidencia];
+};
 
 onMounted(() => {
 	getIncidencias();
