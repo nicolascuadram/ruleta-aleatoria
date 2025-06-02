@@ -47,7 +47,11 @@ onMounted(() => {
             </div>
             <!-- Lista de equipos -->
             <div v-for="equipo in equipos" :key="equipo.id" class="flex flex-col items-start justify-start w-full p-4 border-t border-zinc-700">
-                <h2 class="text-base font-semibold">{{ equipo.nombre }}</h2>
+                <h2 class="text-base w-full text-center font-semibold">{{ equipo.nombre }}</h2>
+                <h2 class="text-base font-semibold">Proyectos:</h2>
+                <h2 class="text-sm font-semibold">- {{ equipo.proyecto1 }}</h2>
+                <h2 class="text-sm font-semibold">- {{ equipo.proyecto2 }}</h2>
+
                 <!-- Lista de alumnos de cada equipo -->
                 <Alumnos :id="equipo.id"/>
             </div>
