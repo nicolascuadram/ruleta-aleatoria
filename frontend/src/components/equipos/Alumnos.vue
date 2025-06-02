@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 
 const props = defineProps({
     id: {
-        type: String,
+        type: Number,
         required: true,
     },
 });
@@ -14,7 +14,7 @@ const alumnos = ref(null);
 // Función para obtener los alumnos de un grupo desde la API
 const getAlumnos = async () => {
     try {
-        const response = await fetch(API_URL + `/api/grupos/${props.id}`, {
+        const response = await fetch(`${API_URL}/api/grupos/${props.id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -23,7 +23,7 @@ const getAlumnos = async () => {
         if (!response.ok) {
             console.error("Status:", response.status);
             throw new Error(
-                "Error en la respuesta del servidor: " + response.statusText
+                `Error en la respuesta del servidor: ${response.statusText}`
             );
         }
         const data = await response.json();

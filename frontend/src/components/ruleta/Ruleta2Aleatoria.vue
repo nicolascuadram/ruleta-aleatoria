@@ -53,14 +53,13 @@ export default {
     },
     
     initGame() {
-      const itemCount = this.items.length;
-      const anglePerItem = 360 / itemCount;
+      const anglePerItem = 360 / this.items.length; // Usar el mismo valor en todas partes
 
-      gsap.set(".ring", { rotationX: -90 });
+      gsap.set(".ring", { rotationX: -270 });
       gsap.set(".item", {
         rotateX: (i) => (i * -anglePerItem),
-        transformOrigin: "50% 50% -220px",
-        z: 220,
+        transformOrigin: "50% 50% -200px",
+        z: 200,
       });
 
       document.querySelector('button.trigger').addEventListener('click', this.spinWheels);
@@ -68,16 +67,16 @@ export default {
     
     spinWheels() {
       const itemCount = this.items.length;
-      const anglePerItem = 360 / itemCount;
+      const anglePerItem = (360 / itemCount);
 
       // Número de vueltas (1-10)
       const fullRotations = (this.xorshift() % 10) + 1;
       
       // Ítem aleatorio como destino final
       const targetIndex = Math.floor(this.xorshift() % itemCount);
-      
+      console.log(targetIndex);
       // Ángulo final con compensación
-      const targetAngle = -(fullRotations * 360 + (targetIndex * anglePerItem));
+      const targetAngle = (fullRotations * 360 + (targetIndex * anglePerItem));
       
       // Mostrar información
       const textcontent = document.getElementById('textcontent');
@@ -151,13 +150,16 @@ export default {
   justify-content: center;
 }
 
-.results, .button-area {  
+.button-area {  
   padding: 1% 0;
   text-align: center;
   margin: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.results{
+  display: none;
 }
 
 button {
@@ -243,7 +245,7 @@ ul {
 .item {
   position: absolute;
   width: 100%;
-  height: 70%;
+  height: 65%;
   display: flex;
   justify-content: center;
   align-items: center;
