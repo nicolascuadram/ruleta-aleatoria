@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 
 const props = defineProps({
     id: {
-        type: String,
+        type: Number,
         required: true,
     },
 });
