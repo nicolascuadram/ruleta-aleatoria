@@ -115,12 +115,39 @@ export default {
       const winningItem = items[winningIndex];
       const textcontent = document.getElementById('textcontent');
       
+      // Dentro de finishScroll()
       if (winningItem) {
-        textcontent.innerHTML = `<p>Resultado: ${winningItem.dataset.content}</p>`;
+        const resultado = winningItem.dataset.content;
+
+        // Enviar resultado al backend
+        fetch('http://localhost:3000/api/ruleta', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ resultado })
+        })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Error al guardar el resultado');
+          }
+          return res.json();
+        })
+        .then(data => {
+          console.log('Resultado guardado:', data);
+        })
+        .catch(err => {
+          console.error('Error de red o servidor:', err);
+        });
+
+
+        // Mostrar resultado en consola
+        console.log('Resultado enviado:', resultado);
+
+        textcontent.innerHTML = `<p>Resultado: ${resultado}</p>`;
         items.forEach(item => item.classList.remove('active'));
         winningItem.classList.add('active');
         
-        // Resaltar ganador
         gsap.to(winningItem, {
           scale: 1.1,
           duration: 0.5,

@@ -192,6 +192,13 @@ CREATE SEQUENCE public.registro_id_seq
 
 ALTER SEQUENCE public.registro_id_seq OWNER TO furzua;
 
+CREATE TABLE IF NOT EXISTS historial_ruleta (
+    id SERIAL PRIMARY KEY,
+    instancia_id INTEGER,
+    valor INTEGER NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 --
 -- Name: registro_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: furzua
 --

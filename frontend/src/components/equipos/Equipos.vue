@@ -1,6 +1,6 @@
-<script setup>
+<script setup> 
 import Alumnos from "./Alumnos.vue";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 const props = defineProps({
     id: {
@@ -10,7 +10,8 @@ const props = defineProps({
 });
 
 const API_URL = import.meta.env.PUBLIC_API_URL;
-const equipos = ref(null);
+const equipos = ref([]);
+const equipoSeleccionado = ref(null);
 
 // Función para obtener los equipos de la instancia desde la API
 const getEquipos = async () => {
@@ -37,21 +38,37 @@ const getEquipos = async () => {
 onMounted(() => {
     getEquipos();
 });
+
+const equipoActual = computed(() => {
+    return equipos.value.find(e => e.id === equipoSeleccionado.value);
+});
 </script>
 
 <template>
     <section class="flex flex-col justify-center items-center w-full h-full p-4">
-        <div v-if="equipos" class="flex flex-col items-center justify-start w-full h-full overflow-y-scroll hide-scrollbar border border-zinc-700 rounded-md shadow-md">
-            <div class="p-4 w-full">
-                <h1 class="text-lg font-bold text-center">Lista de Equipos</h1>
+        <div v-if="equipos.length" class="flex flex-col items-center justify-start w-full h-full">
+            <!-- Selector de equipo -->
+            <div class="mb-4 w-full max-w-md">
+                <label class="block mb-2 text-sm font-medium text-zinc-200">Selecciona un equipo:</label>
+                <select v-model="equipoSeleccionado" class="w-full p-2 rounded-md bg-zinc-800 text-white border border-zinc-600">
+                    <option disabled value="">-- Selecciona --</option>
+                    <option v-for="equipo in equipos" :key="equipo.id" :value="equipo.id">
+                        {{ equipo.nombre }}
+                    </option>
+                </select>
             </div>
-            <!-- Lista de equipos -->
-            <div v-for="equipo in equipos" :key="equipo.id" class="flex flex-col items-start justify-start w-full p-4 border-t border-zinc-700">
-                <h2 class="text-base font-semibold">{{ equipo.nombre }}</h2>
-                <!-- Lista de alumnos de cada equipo -->
-                <Alumnos :id="equipo.id"/>
+
+            <!-- Equipo seleccionado -->
+            <!-- Equipo seleccionado -->
+            <div v-if="equipoActual" class="w-full max-w-2xl bg-zinc-800 border border-zinc-700 rounded-xl shadow-md p-6 space-y-4">
+            <h2 class="text-lg font-semibold text-white">{{ equipoActual.nombre }}</h2>
+            <div class="bg-zinc-900 rounded-md p-4">
+                <Alumnos :id="equipoActual.id" />
             </div>
+            </div>
+
         </div>
+
         <div v-else class="flex justify-center items-center w-full h-full">
             <p class="text-lg font-medium text-zinc-500">Cargando equipos...</p>
         </div>

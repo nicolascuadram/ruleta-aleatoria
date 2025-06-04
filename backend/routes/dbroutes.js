@@ -141,15 +141,43 @@ router.post('/incidencias', async (req, res) => {
     }
 });
 
-router.post('/registros', async (req, res) => {
+router.get('/registros/:id', async(req, res) => {
+   try {
+       const { id } = req.params;
+       const result = await pool.query(getQueries.GetRegistrosByInstancia, [id]);
+       res.json(result.rows);
+   } catch (error) {
+        res.status(500).json({error: "Error al obtener los registros"});
+   }
+})
+
+
+router.get('/historial', async (req, res) => {
     try {
-        const { ref_incidencia, ref_grupo, alumnoescogido, comentario } = req.body;
-        const result = await pool.query(postQueries.AddRegistro, [ref_incidencia, ref_grupo, alumnoescogido, comentario]);
-        res.status(201).json(result.rows[0]);
+        const result = await pool.query(getQueries.GetHistorialRuleta); 
+        res.json(result.rows);
     } catch (error) {
-        res.status(500).json({ error: "Error al crear el registro" });
+        res.status(500).json({ error: "Error al obtener el historial de la ruleta" });
     }
 });
+
+router.post('/ruleta', async (req, res) => {
+    try {
+        const { resultado } = req.body;
+        const insertQuery = 'INSERT INTO resultados_ruleta(resultado, fecha) VALUES($1, NOW()) RETURNING *';
+        const result = await pool.query(insertQuery, [resultado]);
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error('Error al guardar resultado de ruleta:', error);
+        res.status(500).json({ error: "Error al guardar el resultado de la ruleta" });
+    }
+});
+
+router.get('/ruleta', (req, res) => {
+  res.send('Esta ruta solo acepta POST para guardar resultados.');
+});
+
+
 
 
 

@@ -10,7 +10,8 @@ export const getQueries = {
     GetInstanciaById: "SELECT * FROM instancia WHERE id = $1",
     GetGruposByInstancia: "SELECT * FROM grupo WHERE ref_instancia = $1",
     GetAlumnosByGrupo: "SELECT * FROM alumno WHERE ref_grupo = $1",
-    GetAlumnosByInstancia: "SELECT a.id, a.nombre, a.ref_grupo FROM alumno a JOIN grupo g ON a.ref_grupo = g.id JOIN instancia i ON g.ref_instancia = i.id WHERE i.id = $1;"
+    GetAlumnosByInstancia: "SELECT a.id, a.nombre, a.ref_grupo FROM alumno a JOIN grupo g ON a.ref_grupo = g.id JOIN instancia i ON g.ref_instancia = i.id WHERE i.id = $1;",
+    GetHistorialRuleta: "SELECT * FROM historial_ruleta ORDER BY fecha DESC"
 }
 
 export const postQueries = {
