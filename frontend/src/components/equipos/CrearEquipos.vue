@@ -209,6 +209,8 @@ export default{
           const groupData = {
             ref_instancia: this.id,
             nombre: `Grupo ${item.grupo}`,
+            proyecto1: item.proyecto1,
+            proyecto2: item.proyecto2,
           };
           const nuevoGrupo = await this.createGroup(groupData);
           grupoId = nuevoGrupo.id;

@@ -113,8 +113,8 @@ router.post('/instancias', async (req, res) => {
 
 router.post('/grupos', async (req, res) => {
     try {
-        const { ref_instancia, nombre } = req.body;
-        const result = await pool.query(postQueries.AddGrupo, [ref_instancia, nombre]);
+        const { ref_instancia, nombre,proyecto1,proyecto2 } = req.body;
+        const result = await pool.query(postQueries.AddGrupo, [ref_instancia, nombre,proyecto1,proyecto2]);
         res.status(201).json(result.rows[0]);
     } catch (error) {
         res.status(500).json({ error: "Error al crear el grupo" });
