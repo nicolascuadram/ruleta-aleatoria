@@ -45,12 +45,12 @@ const equipoActual = computed(() => {
 </script>
 
 <template>
-    <section class="flex flex-col justify-center items-center w-full h-full px-4">
+    <section class="flex flex-col justify-center items-center w-full h-full">
         <div v-if="equipos" class="flex flex-col items-center justify-start w-full h-full gap-2">
             <!-- Selector de equipo -->
             <div class="flex flex-col justify-start items-start w-full gap-1">
-                <label class="block text-base font-medium text-zinc-100">Equipo seleccionado:</label>
-                <select v-model="equipoSeleccionado" class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-white outline-none">
+                <!-- <label class="block text-base font-medium text-zinc-50">Equipo seleccionado:</label> -->
+                <select v-model="equipoSeleccionado" class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-zinc-50 outline-none">
                     <option value="" disabled selected>Selecciona un equipo</option>
                     <option v-for="equipo in equipos" :key="equipo.id" :value="equipo.id">
                         {{ equipo.nombre }}
@@ -63,7 +63,7 @@ const equipoActual = computed(() => {
             </div>
         </div>
         <div v-else class="flex justify-center items-center w-full h-full">
-            <p class="text-lg font-medium text-zinc-500">Cargando equipos...</p>
+            <p class="text-lg font-medium text-zinc-50">Cargando equipos...</p>
         </div>
     </section>
 </template>

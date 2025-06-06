@@ -46,11 +46,11 @@ onMounted(() => {
         <div class="flex flex-col items-center justify-start w-full border-b border-zinc-700">
             <div v-for="alumno in alumnos" :key="alumno.id" class="flex justify-start items-center w-full p-2 gap-2 border-t border-zinc-700">
                 <User color="#fff" size="20" />
-                <h2 class="text-base font-medium">{{ alumno.nombre }}</h2>
+                <p class="text-base font-medium">{{ alumno.nombre }}</p>
             </div>
         </div>
     </section>
     <div v-else class="flex justify-center items-center w-full h-full">
-        <p class="text-lg font-medium text-zinc-500">Cargando alumnos...</p>
+        <p class="text-lg font-medium text-zinc-50">Cargando alumnos...</p>
     </div>
 </template>
