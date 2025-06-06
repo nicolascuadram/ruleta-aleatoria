@@ -117,14 +117,20 @@ onMounted(() => {
 	<div class="flex justify-between items-start w-full h-full">
 		<!-- Lado Izquierdo -->
 		<div class="basis-1/4 grow h-full">
+			<!-- Opciones de la Instancia -->
+			<div class="flex flex-wrap justify-start items-center w-full p-4 gap-2">
+				<CrearEquipos :id="id" />
+				<Historial :id="id" />
+			</div>
 			<!-- Lista de Equipos de la Instancia -->
 			<Equipos :id="id" />
 		</div>
 		<!-- Lado Central -->
 		<div class="basis-2/4 grow h-full">
-			<!-- Ruleta Aleatoria -->
+			<!-- Componente Visual Ruleta -->
 			<Ruleta :id="id" />
 			<!-- <Ruleta :contenido="contenido_ruleta" :resultado="resultado_ruleta" /> -->
+			<!-- Botón Girar Ruleta -->
 			<button
 				class="bg-zinc-50 text-zinc-900 font-medium text-base py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap"
 				v-if="contenido_ruleta" @click="girarRuleta">
@@ -133,12 +139,11 @@ onMounted(() => {
 		</div>
 		<!-- Lado Derecho -->
 		<div class="basis-1/4 grow h-full">
-			<!-- Detalles o Configuraciones de la Ruleta -->
-			<div class="flex flex-wrap justify-start items-center w-full p-4 gap-2">
-				<CrearEquipos :id="id" />
-				<SubirIncidencias :id="id" />
-				<Historial :id="id" />
-			</div>
+			<!-- <div class="flex flex-wrap justify-start items-center w-full p-4 gap-2">
+				<SubirIncidencias :id="id" /> <-- Mover al Navbar y hacerlo Global
+			</div> -->
+			<!-- Resumen de la Ejecución -->
+			
 		</div>
 	</div>
 </template>
