@@ -11,7 +11,7 @@
         </div> -->
         <label
           class="bg-zinc-50 text-zinc-900 font-medium px-4 py-2 rounded-md cursor-pointer hover:bg-zinc-300 transition duration-300 shadow-md text-nowrap">
-          Subir Grupos
+          Subir Equipos
           <input type="file" @change="handleFileChange" accept=".xlsx" class="hidden" />
         </label>
       </div>

@@ -54,6 +54,7 @@ const equipo_seleccionado = ref(null);
 const contenido_ruleta = ref([]);
 const resultado_ruleta = ref(null);
 const contenido_boton = ref(null);
+const no_hay_subcategoria = ref(true);
 
 // Obtener Lista de incidencias
 const getIncidencias = async () => {
@@ -114,17 +115,23 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="flex justify-between items-start w-full h-full">
+	<div class="flex md:flex-row md:justify-between md:items-start md:overflow-clip flex-col justify-start items-center w-full h-full overflow-y-scroll">
 		<!-- Lado Izquierdo -->
-		<div class="basis-1/4 grow h-full">
+		<div class="basis-1/4 grow h-full p-4">
+			<!-- Opciones de la Instancia -->
+			<div class="flex flex-wrap justify-start items-center w-full gap-2 mb-4">
+				<CrearEquipos :id="id" />
+				<Historial :id="id" />
+			</div>
 			<!-- Lista de Equipos de la Instancia -->
 			<Equipos :id="id" />
 		</div>
 		<!-- Lado Central -->
 		<div class="basis-2/4 grow h-full">
-			<!-- Ruleta Aleatoria -->
+			<!-- Componente Visual Ruleta -->
 			<Ruleta :id="id" />
 			<!-- <Ruleta :contenido="contenido_ruleta" :resultado="resultado_ruleta" /> -->
+			<!-- Botón Girar Ruleta -->
 			<button
 				class="bg-zinc-50 text-zinc-900 font-medium text-base py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap"
 				v-if="contenido_ruleta" @click="girarRuleta">
@@ -132,13 +139,39 @@ onMounted(() => {
 			</button>
 		</div>
 		<!-- Lado Derecho -->
-		<div class="basis-1/4 grow h-full">
-			<!-- Detalles o Configuraciones de la Ruleta -->
-			<div class="flex flex-wrap justify-start items-center w-full p-4 gap-2">
-				<CrearEquipos :id="id" />
-				<SubirIncidencias :id="id" />
-				<Historial :id="id" />
+		<div class="basis-1/4 grow h-full p-4">
+			<!-- <div class="flex flex-wrap justify-end items-center w-full gap-2 mb-4">
+				<SubirIncidencias :id="id" /> <-- Mover al Navbar y hacerlo Global
+			</div> -->
+			<!-- Botones de Giros Extra -->
+			<div class="flex flex-wrap justify-end items-center w-full gap-2 mb-4">
+				<button
+					class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
+					disabled:bg-zinc-600 disabled:cursor-not-allowed"
+					type="button" :disabled="no_hay_subcategoria">
+					Girar Alumnos
+				</button>
+				<button
+					class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
+					disabled:bg-zinc-600 disabled:cursor-not-allowed"
+					type="button" :disabled="no_hay_subcategoria">
+					Girar Equipos
+				</button>
 			</div>
+			<!-- Resumen de la Ejecución -->
+			<section class="flex flex-col w-full p-4 gap-2 bg-zinc-900 rounded-md border border-zinc-700 shadow-md">
+				<h2 class="text-lg font-bold">Resumen de la Ejecución:</h2>
+				<div class="flex flex-col w-full gap-1">
+					<p><strong class="font-semibold">Categoría: </strong>{{ categoria_seleccionada }}</p>
+					<p><strong class="font-semibold">Subcategoría: </strong>{{ subcategoria_seleccionada }}</p>
+				</div>
+				<button
+					class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
+					disabled:bg-zinc-600 disabled:cursor-not-allowed"
+					type="button" :disabled="no_hay_subcategoria">
+					Finalizar Ejecución
+				</button>
+			</section>
 		</div>
 	</div>
 </template>

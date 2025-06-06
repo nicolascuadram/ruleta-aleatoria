@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { User } from 'lucide-vue-next';
 
 const props = defineProps({
     id: {
@@ -39,13 +40,17 @@ onMounted(() => {
 </script>
 
 <template>
-    <div v-if="alumnos" class="flex flex-col items-center justify-start w-full h-full overflow-hidden border border-zinc-700 rounded-md shadow-md mt-4">
-        <!-- Lista de alumnos -->
-        <div v-for="alumno in alumnos" :key="alumno.id" class="flex flex-col items-start justify-start w-full p-2 border-t border-zinc-700">
-            <h2 class="text-base font-semibold">{{ alumno.nombre }}</h2>
+    <!-- Lista de alumnos -->
+    <section v-if="alumnos" class="flex flex-col items-start justify-start w-full gap-2">
+        <h2 class="text-base font-semibold">Integrantes:</h2>
+        <div class="flex flex-col items-center justify-start w-full border-b border-zinc-700">
+            <div v-for="alumno in alumnos" :key="alumno.id" class="flex justify-start items-center w-full p-2 gap-2 border-t border-zinc-700">
+                <User color="#fff" size="20" />
+                <p class="text-base font-medium">{{ alumno.nombre }}</p>
+            </div>
         </div>
-    </div>
+    </section>
     <div v-else class="flex justify-center items-center w-full h-full">
-        <p class="text-lg font-medium text-zinc-500">Cargando alumnos...</p>
+        <p class="text-lg font-medium text-zinc-50">Cargando alumnos...</p>
     </div>
 </template>
