@@ -1,6 +1,6 @@
-<script setup>
+<script setup> 
 import Alumnos from "./Alumnos.vue";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 const props = defineProps({
     id: {
@@ -10,7 +10,8 @@ const props = defineProps({
 });
 
 const API_URL = import.meta.env.PUBLIC_API_URL;
-const equipos = ref(null);
+const equipos = ref([]);
+const equipoSeleccionado = ref('');
 
 // Función para obtener los equipos de la instancia desde la API
 const getEquipos = async () => {
@@ -37,27 +38,83 @@ const getEquipos = async () => {
 onMounted(() => {
     getEquipos();
 });
+
+const equipoActual = computed(() => {
+    return equipos.value.find(e => e.id === equipoSeleccionado.value);
+});
 </script>
 
 <template>
-    <section class="flex flex-col justify-center items-center w-full h-full p-4">
-        <div v-if="equipos" class="flex flex-col items-center justify-start w-full h-full overflow-y-scroll hide-scrollbar border border-zinc-700 rounded-md shadow-md">
-            <div class="p-4 w-full">
-                <h1 class="text-lg font-bold text-center">Lista de Equipos</h1>
+    <section class="flex flex-col justify-center items-center w-full h-full">
+        <div v-if="equipos" class="flex flex-col items-center justify-start w-full h-full gap-2">
+            <!-- Selector de equipo -->
+            <div class="flex flex-col justify-start items-start w-full gap-1">
+                <!-- <label class="block text-base font-medium text-zinc-50">Equipo seleccionado:</label> -->
+                <select v-model="equipoSeleccionado" class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-zinc-50 outline-none">
+                    <option value="" disabled selected>Selecciona un equipo</option>
+                    <option v-for="equipo in equipos" :key="equipo.id" :value="equipo.id">
+                        {{ equipo.nombre }}
+                    </option>
+                </select>
             </div>
-            <!-- Lista de equipos -->
-            <div v-for="equipo in equipos" :key="equipo.id" class="flex flex-col items-start justify-start w-full p-4 border-t border-zinc-700">
-                <h2 class="text-base w-full text-center font-semibold">{{ equipo.nombre }}</h2>
-                <h2 class="text-base font-semibold">Proyectos:</h2>
-                <h2 class="text-sm font-semibold">- {{ equipo.proyecto1 }}</h2>
-                <h2 class="text-sm font-semibold">- {{ equipo.proyecto2 }}</h2>
-
-                <!-- Lista de alumnos de cada equipo -->
-                <Alumnos :id="equipo.id"/>
+            <!-- Equipo seleccionado -->
+            <div v-if="equipoActual" class="flex flex-col justify-start items-start w-full bg-zinc-900 border border-zinc-700 rounded-md shadow-md p-4">
+                <Alumnos :id="equipoActual.id" />
             </div>
         </div>
         <div v-else class="flex justify-center items-center w-full h-full">
-            <p class="text-lg font-medium text-zinc-500">Cargando equipos...</p>
+            <p class="text-lg font-medium text-zinc-50">Cargando equipos...</p>
         </div>
     </section>
 </template>
+
+<style scoped>
+/* Habilitar estilos personalizables para el select (Chrome) */
+select {
+    &, &::picker(select) {
+        appearance: base-select;
+    }
+}
+
+/* Estilos del select */
+::picker(select) {
+    background-color: #18181b;
+    color: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #3f3f46;
+    top: calc(anchor(bottom) + 2px);
+}
+
+/* Icono del select */
+select::picker-icon {
+    width: 24px;
+    height: 24px;
+    content: url("../../assets/chevron-down.svg");
+    transition: 0.3s rotate;
+}
+
+select:open::picker-icon {
+  rotate: 180deg;
+}
+
+/* Estilos de las opciones del select */
+select option {
+    background-color: #18181b;
+    color: #ffffff;
+    padding: 4px 8px;
+}
+
+select option:checked, select option:hover {
+    background-color: #fafafa;
+    color: #18181b;
+}
+
+select option:disabled {
+    background-color: #18181b;
+    color: #3f3f46;
+}
+
+option::checkmark {
+    display: none;
+}
+</style>

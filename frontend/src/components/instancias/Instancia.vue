@@ -3,9 +3,9 @@ import { ref, onMounted } from 'vue';
 import Equipos from "../equipos/Equipos.vue";
 import CrearEquipos from "../equipos/CrearEquipos.vue";
 import Ruleta from "../ruleta/Ruleta2Aleatoria.vue";
+import Ruleta3 from '../ruleta/Ruleta3.vue';
 import Historial from "../historial/Historial.vue";
 import SubirIncidencias from "../incidencias/SubirIncidencias.vue";
-import Ejecucion from '../Ejecucion.vue';
 const API_URL = import.meta.env.PUBLIC_API_URL;
 
 // Props
@@ -16,14 +16,14 @@ const props = defineProps({
 	}
 });
 
-const emit = defineEmits(['update:girar_ruleta']);
+/* const emit = defineEmits(['update:girar_ruleta']); */
 
 // Este evento se debe ejecutar cuando el usuario quiera girar la ruleta clickeando el botón.
 // El componente de la ruleta debe recibir este evento y hacer la animación.
 // Al finalizar la animación el componente de la ruleta debe crear otro evento como este para actualizarla.
-const girarRuleta = () => {
+/* const girarRuleta = () => {
 	emit('update:girar_ruleta', contenido_ruleta.value, generarResultado(contenido_ruleta.value));
-};
+}; */
 
 // Actualizar contenido de la ruleta.
 // Comprobar si el resultado recibido es una categoria, o una subcategoria, u otro resultado.
@@ -34,10 +34,12 @@ const girarRuleta = () => {
 const categoria_seleccionada = ref(null);
 const subcategoria_seleccionada = ref(null);
 
-const actualizarRuleta = (res) => {
-	if (categorias.value.includes(res)) {
-		contenido_ruleta.value = getSubcategorias(res);
+const actualizarRuleta = (resultado) => {
+	if (categorias.value.includes(resultado)) {
+		categoria_seleccionada.value = resultado;
+		contenido_ruleta.value = getSubcategorias(resultado);
 		contenido_boton.value = "Seleccionar Subcategoría";
+		console.log(getSubcategorias(resultado));
 	} else {
 		// Mostrar botón para:
 		// 1. Finalizar ejecución
@@ -54,6 +56,7 @@ const equipo_seleccionado = ref(null);
 const contenido_ruleta = ref([]);
 const resultado_ruleta = ref(null);
 const contenido_boton = ref(null);
+const no_hay_subcategoria = ref(true);
 
 // Obtener Lista de incidencias
 const getIncidencias = async () => {
@@ -86,8 +89,10 @@ const getIncidencias = async () => {
 
 // Función para obtener las subcategorías de una categoría
 function getSubcategorias(categoria) {
-	return incidencias.value.filter(i => i.categoria === categoria);
-};
+	return incidencias.value
+		.filter(i => i.categoria === categoria)
+		.map(i => i.subcategoria);
+}
 
 // Algoritmo Xorshift
 function xorshift() {
@@ -114,31 +119,64 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="flex justify-between items-start w-full h-full">
+	<div class="flex md:flex-row md:justify-between md:items-start md:overflow-clip flex-col justify-start items-center w-full h-full overflow-y-scroll">
 		<!-- Lado Izquierdo -->
-		<div class="basis-1/4 grow h-full">
+		<div class="w-full md:basis-1/4 grow h-full p-4">
+			<!-- Opciones de la Instancia -->
+			<div class="flex flex-wrap justify-start items-center w-full gap-2 mb-4">
+				<CrearEquipos :id="id" />
+				<Historial :id="id" />
+			</div>
 			<!-- Lista de Equipos de la Instancia -->
 			<Equipos :id="id" />
 		</div>
 		<!-- Lado Central -->
-		<div class="basis-2/4 grow h-full">
-			<!-- Ruleta Aleatoria -->
-			<Ruleta :id="id" />
+		<div class="w-full md:basis-2/4 grow h-full">
+			<!-- Componente Visual Ruleta -->
+			<!-- <Ruleta :id="id" /> -->
 			<!-- <Ruleta :contenido="contenido_ruleta" :resultado="resultado_ruleta" /> -->
-			<button
+			<Ruleta3 :items="contenido_ruleta" @result="actualizarRuleta" />
+			<!-- Botón Girar Ruleta -->
+			<!-- <button
 				class="bg-zinc-50 text-zinc-900 font-medium text-base py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap"
 				v-if="contenido_ruleta" @click="girarRuleta">
 				Girar Ruleta
-			</button>
+			</button> -->
 		</div>
 		<!-- Lado Derecho -->
-		<div class="basis-1/4 grow h-full">
-			<!-- Detalles o Configuraciones de la Ruleta -->
-			<div class="flex flex-wrap justify-start items-center w-full p-4 gap-2">
-				<CrearEquipos :id="id" />
-				<SubirIncidencias :id="id" />
-				<Historial :id="id" />
+		<div class="w-full md:basis-1/4 grow h-full p-4">
+			<!-- <div class="flex flex-wrap justify-end items-center w-full gap-2 mb-4">
+				<SubirIncidencias :id="id" /> <-- Mover al Navbar y hacerlo Global
+			</div> -->
+			<!-- Botones de Giros Extra -->
+			<div class="flex flex-wrap justify-center md:justify-end items-center w-full gap-2 mb-4">
+				<button
+					class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
+					disabled:bg-zinc-600 disabled:cursor-not-allowed"
+					type="button" :disabled="no_hay_subcategoria">
+					Girar Alumnos
+				</button>
+				<button
+					class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
+					disabled:bg-zinc-600 disabled:cursor-not-allowed"
+					type="button" :disabled="no_hay_subcategoria">
+					Girar Equipos
+				</button>
 			</div>
+			<!-- Resumen de la Ejecución -->
+			<section class="flex flex-col w-full p-4 gap-2 bg-zinc-900 rounded-md border border-zinc-700 shadow-md">
+				<h2 class="text-lg font-bold">Resumen de la Ejecución:</h2>
+				<div class="flex flex-col w-full gap-1">
+					<p><strong class="font-semibold">Categoría: </strong>{{ categoria_seleccionada }}</p>
+					<p><strong class="font-semibold">Subcategoría: </strong>{{ subcategoria_seleccionada }}</p>
+				</div>
+				<button
+					class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
+					disabled:bg-zinc-600 disabled:cursor-not-allowed"
+					type="button" :disabled="no_hay_subcategoria">
+					Finalizar Ejecución
+				</button>
+			</section>
 		</div>
 	</div>
 </template>
