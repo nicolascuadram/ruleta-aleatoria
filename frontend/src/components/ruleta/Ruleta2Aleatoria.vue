@@ -6,11 +6,13 @@
           <div id="col1" class="col third wheel">
             <div class="wheel-container">
               <ul id="ring1" class="ring">
-                <li v-for="(item, index) in items" 
-                    :key="'ring1-'+index" 
-                    :data-content="item" 
+                <li v-for="(item, index) in item"
+                    :key="'ring1-' + index"
+                    :data-content="item"
                     class="item">
-                  <span>{{ item }}</span>
+                  <div class="item-content"> 
+                    <span>{{ item }}</span>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -18,7 +20,9 @@
         </div>
       </div>
     </div>
-    <div class="button-area"><button id="play" class="trigger">Girar ruleta</button></div>
+    <div class="button-area">
+      <button id="play" class="trigger">Girar ruleta</button>
+    </div>
     <div class="results">
       <div id="textcontent">Esperando</div>
     </div>
@@ -28,22 +32,59 @@
 <script>
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
 gsap.registerPlugin(ScrollTrigger);
 
-export default {
-  data() {
-    return {
-      seed: Date.now(),
-      items: ['Organizacional','Operativo','Tecnológico','Proyecto','Personal',
-              'Organizacional','Operativo','Tecnológico','Proyecto','Personal']
+const API_URL = import.meta.env.PUBLIC_API_URL;
+
+export default{
+  props:{
+    id: {
+      type: String,
+      required: true
     }
   },
-  mounted() {
-    this.initGame();
+  data(){
+    return{
+      seed: Date.now(),
+      item: [], // Lo que se muestra actualmente en la ruleta
+      item2: {}, // Subcategorías por categoría
+      incidencias: [],
+      categoriaSeleccionada: null,
+      turno: 1 // 1: categorías, 2: subcategorías, 3: categorías, etc.
+    };
   },
-  methods: {
-    xorshift() {
+  mounted(){
+    this.getIncidencias();
+    document.querySelector('button.trigger').addEventListener('click', this.spinWheels);
+  },
+  methods:{
+    async getIncidencias(){
+      try{
+        const response = await fetch(`${API_URL}/api/incidencias/${this.id}`);
+        if(!response.ok) throw new Error(`Error del servidor: ${response.statusText}`);
+
+        const data = await response.json();
+        this.incidencias = data;
+
+        // Agrupar categorías únicas
+        const categorias = [...new Set(data.map(i => i.categoria))];
+        this.item2 = {};
+
+        categorias.forEach(categoria =>{
+          this.item2[categoria] = [
+            ...new Set(data.filter(i => i.categoria === categoria).map(i => i.subcategoria))
+          ];
+        });
+
+        this.item = categorias; // Primer giro es de categorías
+
+        this.$nextTick(this.setupRing);
+      } catch (err) {
+        console.error("Error fetching incidencias:", err);
+      }
+    },
+
+    xorshift(){
       let x = this.seed >>> 0;
       x ^= x << 13;
       x ^= x >> 17;
@@ -51,114 +92,109 @@ export default {
       this.seed = x >>> 0;
       return this.seed;
     },
-    
-    initGame() {
-      const anglePerItem = 360 / this.items.length; // Usar el mismo valor en todas partes
 
-      gsap.set(".ring", { rotationX: -270 });
-      gsap.set(".item", {
-        rotateX: (i) => (i * -anglePerItem),
-        transformOrigin: "50% 50% -200px",
-        z: 200,
+    setupRing(){
+      const anglePerItem = 360 / this.item.length;
+      gsap.set(".ring", { rotationX: 0 });
+
+      gsap.utils.toArray(".item").forEach((el, i) => {
+        gsap.set(el, {
+          rotateX: i * -anglePerItem,
+          transformOrigin: "50% 50% -200px",
+          z: 200,
+        });
       });
-
-      document.querySelector('button.trigger').addEventListener('click', this.spinWheels);
     },
-    
-    spinWheels() {
-      const itemCount = this.items.length;
-      const anglePerItem = (360 / itemCount);
 
-      // Número de vueltas (1-10)
-      const fullRotations = (this.xorshift() % 10) + 1;
-      
-      // Ítem aleatorio como destino final
-      const targetIndex = Math.floor(this.xorshift() % itemCount);
-      console.log(targetIndex);
-      // Ángulo final con compensación
-      const targetAngle = (fullRotations * 360 + (targetIndex * anglePerItem));
-      
-      // Mostrar información
-      const textcontent = document.getElementById('textcontent');
-      textcontent.innerHTML = `<p>Girando...</p>`;
-      
-      // Preparar animación
-      document.querySelector('.stage').classList.remove('notstarted');
-      document.querySelectorAll('.ring .item').forEach(item => {
-        item.classList.remove('active');
+    spinWheels(){
+      const isTurnoCategoria = this.turno % 2 === 1;
+
+      if(isTurnoCategoria){
+        this.item = Object.keys(this.item2);
+      }else{
+        if(!this.categoriaSeleccionada || !this.item2[this.categoriaSeleccionada]){
+          alert("No hay subcategorías para la categoría seleccionada.");
+          return;
+        }
+        this.item = this.item2[this.categoriaSeleccionada];
+      }
+
+      if(this.item.length === 0){
+        alert("No hay datos para mostrar.");
+        return;
+      }
+
+      this.$nextTick(() => {
+        this.setupRing();
+        this.startSpin(this.item.length);
       });
+    },
 
-      // Animación GSAP
+    startSpin(itemCount){
+      const anglePerItem = 360 / itemCount;
+      const fullRotations = (this.xorshift() % 10) + 1;
+      const targetIndex = Math.floor(this.xorshift() % itemCount);
+      const targetAngle = fullRotations * 360 + targetIndex * anglePerItem;
+
+      document.querySelector('.stage').classList.remove('notstarted');
+      document.querySelectorAll('.ring .item').forEach(item => item.classList.remove('active'));
+      document.getElementById('textcontent').innerHTML = `<p>Girando...</p>`;
+
       gsap.to('#ring1', {
         rotationX: targetAngle,
-        duration: 2 + fullRotations * 0.3,
-        ease: 'power3.out',
+        duration: 6 + fullRotations * 0.3,
+        ease: 'power2.inOut',
         onComplete: this.finishScroll
       });
     },
-    
-    finishScroll() {
+
+    finishScroll(){
       const ring = document.querySelector('#ring1');
       const items = ring.querySelectorAll('.item');
       const itemCount = items.length;
       const anglePerItem = 360 / itemCount;
-      
-      // Obtener y normalizar rotación (0-360)
+
       let rotation = (gsap.getProperty(ring, "rotationX") % 360 + 360) % 360;
-      
-      // Compensación visual (ajustar según necesidad)
-      const visualOffset = anglePerItem / 2; // Punto medio del ítem
+      const visualOffset = anglePerItem / 2;
       const normalizedAngle = (rotation + visualOffset) % 360;
       const winningIndex = Math.floor(normalizedAngle / anglePerItem) % itemCount;
-      
-      // Seleccionar ganador
       const winningItem = items[winningIndex];
-      const textcontent = document.getElementById('textcontent');
-      
-      // Dentro de finishScroll()
-      if (winningItem) {
-        const resultado = winningItem.dataset.content;
 
-        // Enviar resultado al backend
-        fetch('http://localhost:3000/api/ruleta', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ resultado })
-        })
-        .then(res => {
-          if (!res.ok) {
-            throw new Error('Error al guardar el resultado');
-          }
-          return res.json();
-        })
-        .then(data => {
-          console.log('Resultado guardado:', data);
-        })
-        .catch(err => {
-          console.error('Error de red o servidor:', err);
-        });
+      if (!winningItem) return;
 
+      const resultado = winningItem.dataset.content;
+      document.getElementById('textcontent').innerHTML = `<p>Resultado: ${resultado}</p>`;
 
-        // Mostrar resultado en consola
-        console.log('Resultado enviado:', resultado);
-
-        textcontent.innerHTML = `<p>Resultado: ${resultado}</p>`;
-        items.forEach(item => item.classList.remove('active'));
-        winningItem.classList.add('active');
-        
-        gsap.to(winningItem, {
-          scale: 1.1,
-          duration: 0.5,
-          yoyo: true,
-          repeat: 1
-        });
+      // Guardar categoría para subcategoría futura
+      if (this.turno % 2 === 1) {
+        this.categoriaSeleccionada = resultado;
       }
+
+      // Guardar en backend
+      fetch('http://localhost:3000/api/ruleta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resultado })
+      }).catch(err => {
+        console.error('Error guardando resultado:', err);
+      });
+
+      items.forEach(item => item.classList.remove('active'));
+      winningItem.classList.add('active');
+
+      gsap.to(winningItem, {
+        scale: 1.1,
+        duration: 0.5,
+        yoyo: true,
+        repeat: 1
+      });
+
+      this.turno++;
     }
   }
-}
+};
 </script>
+
 
 <style scoped>
 .wheel-system {
@@ -207,11 +243,51 @@ button:hover {
   border-color: #16a085;
 }
 
-.ring, .item, .console-outer {
+.item, .console-outer {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
   user-select: none;
+}
+
+.ring {
+  width: 300px;
+  height: 300px;
+  position: relative;
+  transform-style: preserve-3d;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  pointer-events: none; /* Opcional: permite clicks en los items */
+}
+
+/* Asegúrate que los items sean visibles */
+.item {
+  pointer-events: auto; /* Permite interactuar con los items */
+  /* Resto de tus estilos para items... */
+}
+
+.item {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.item-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  transform: translateZ(150px); /* ¡Clave para posición 3D! */
 }
 
 .row.console {
@@ -256,32 +332,19 @@ button:hover {
 
 .wheel-container {
   perspective: 2000px;
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   position: relative;
+  transform-style: preserve-3d; 
 }
+
 
 ul {
   list-style: none;
   padding: 0;
-}
-
-.item {
-  position: absolute;
-  width: 100%;
-  height: 65%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  transform-origin: 50% 50% -100px;
-  backface-visibility: visible;
-  opacity: 0.9;
 }
 
 .item span {
