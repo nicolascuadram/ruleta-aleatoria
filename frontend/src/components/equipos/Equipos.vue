@@ -1,46 +1,32 @@
 <script setup> 
 import Alumnos from "./Alumnos.vue";
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, watch} from 'vue';
 
 const props = defineProps({
     id: {
         type: String,
         required: true,
     },
+    equipos: {
+        type: Array,
+        default: () => [],
+        required: true,
+    },
 });
+
+// Emits
+const emit = defineEmits(['equipo_seleccionado']);
 
 const API_URL = import.meta.env.PUBLIC_API_URL;
-const equipos = ref([]);
 const equipoSeleccionado = ref('');
 
-// Función para obtener los equipos de la instancia desde la API
-const getEquipos = async () => {
-    try {
-        const response = await fetch(`${API_URL}/api/instancias/${props.id}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        if (!response.ok) {
-            console.error("Status:", response.status);
-            throw new Error(
-                `Error en la respuesta del servidor: ${response.statusText}`
-            );
-        }
-        const data = await response.json();
-        equipos.value = data;
-    } catch (err) {
-        console.error("Error fetching equipos:", err);
-    }
-};
 
-onMounted(() => {
-    getEquipos();
-});
 
-const equipoActual = computed(() => {
-    return equipos.value.find(e => e.id === equipoSeleccionado.value);
+watch(equipoSeleccionado, (nuevoValor) => {
+    console.log("Equipo seleccionado (id):", equipoSeleccionado.value);
+    emit('equipo_seleccionado',equipoSeleccionado.value);
+    console.log("Nuevo equipo seleccionado (id):", nuevoValor);
+    
 });
 </script>
 
@@ -54,12 +40,13 @@ const equipoActual = computed(() => {
                     <option value="" disabled selected>Selecciona un equipo</option>
                     <option v-for="equipo in equipos" :key="equipo.id" :value="equipo.id">
                         {{ equipo.nombre }}
+                        
                     </option>
                 </select>
             </div>
             <!-- Equipo seleccionado -->
-            <div v-if="equipoActual" class="flex flex-col justify-start items-start w-full bg-zinc-900 border border-zinc-700 rounded-md shadow-md p-4">
-                <Alumnos :id="equipoActual.id" />
+            <div v-if="equipoSeleccionado" class="flex flex-col justify-start items-start w-full bg-zinc-900 border border-zinc-700 rounded-md shadow-md p-4">
+                <Alumnos :id="equipoSeleccionado" />
             </div>
         </div>
         <div v-else class="flex justify-center items-center w-full h-full">
