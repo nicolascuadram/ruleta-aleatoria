@@ -53,14 +53,13 @@ export default {
     },
     
     initGame() {
-      const itemCount = this.items.length;
-      const anglePerItem = 360 / itemCount;
+      const anglePerItem = 360 / this.items.length; // Usar el mismo valor en todas partes
 
-      gsap.set(".ring", { rotationX: -90 });
+      gsap.set(".ring", { rotationX: -270 });
       gsap.set(".item", {
         rotateX: (i) => (i * -anglePerItem),
-        transformOrigin: "50% 50% -220px",
-        z: 220,
+        transformOrigin: "50% 50% -200px",
+        z: 200,
       });
 
       document.querySelector('button.trigger').addEventListener('click', this.spinWheels);
@@ -68,16 +67,16 @@ export default {
     
     spinWheels() {
       const itemCount = this.items.length;
-      const anglePerItem = 360 / itemCount;
+      const anglePerItem = (360 / itemCount);
 
       // Número de vueltas (1-10)
       const fullRotations = (this.xorshift() % 10) + 1;
       
       // Ítem aleatorio como destino final
       const targetIndex = Math.floor(this.xorshift() % itemCount);
-      
+      console.log(targetIndex);
       // Ángulo final con compensación
-      const targetAngle = -(fullRotations * 360 + (targetIndex * anglePerItem));
+      const targetAngle = (fullRotations * 360 + (targetIndex * anglePerItem));
       
       // Mostrar información
       const textcontent = document.getElementById('textcontent');
@@ -116,12 +115,39 @@ export default {
       const winningItem = items[winningIndex];
       const textcontent = document.getElementById('textcontent');
       
+      // Dentro de finishScroll()
       if (winningItem) {
-        textcontent.innerHTML = `<p>Resultado: ${winningItem.dataset.content}</p>`;
+        const resultado = winningItem.dataset.content;
+
+        // Enviar resultado al backend
+        fetch('http://localhost:3000/api/ruleta', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ resultado })
+        })
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Error al guardar el resultado');
+          }
+          return res.json();
+        })
+        .then(data => {
+          console.log('Resultado guardado:', data);
+        })
+        .catch(err => {
+          console.error('Error de red o servidor:', err);
+        });
+
+
+        // Mostrar resultado en consola
+        console.log('Resultado enviado:', resultado);
+
+        textcontent.innerHTML = `<p>Resultado: ${resultado}</p>`;
         items.forEach(item => item.classList.remove('active'));
         winningItem.classList.add('active');
         
-        // Resaltar ganador
         gsap.to(winningItem, {
           scale: 1.1,
           duration: 0.5,
@@ -151,13 +177,16 @@ export default {
   justify-content: center;
 }
 
-.results, .button-area {  
+.button-area {  
   padding: 1% 0;
   text-align: center;
   margin: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+.results{
+  display: none;
 }
 
 button {
@@ -243,7 +272,7 @@ ul {
 .item {
   position: absolute;
   width: 100%;
-  height: 70%;
+  height: 65%;
   display: flex;
   justify-content: center;
   align-items: center;

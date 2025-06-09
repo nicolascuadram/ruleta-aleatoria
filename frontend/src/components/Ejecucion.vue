@@ -1,80 +1,107 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
+const API_URL = import.meta.env.PUBLIC_API_URL;
 
-// Variables reactivas
-const seed = ref(Date.now())
-const categoriaSeleccionada = ref(null)
-const incidenciaSeleccionada = ref(null)
+// Props y Emits
+const emit = defineEmits(['update:roulette_content']);
 
-// Lista de incidencias
-const incidencias = [
-    { id: 1, categoria: 'Organizacional', descripcion: 'Cambia de JP/SM' },
-    { id: 2, categoria: 'Organizacional', descripcion: 'Cambia de proyecto principal' },
-    { id: 3, categoria: 'Organizacional', descripcion: 'Cambia de tablero kanban' },
-    { id: 4, categoria: 'Organizacional', descripcion: 'Cambia de horario de trabajo' },
-    { id: 5, categoria: 'Organizacional', descripcion: 'Cambia de planificación' },
-    { id: 6, categoria: 'Operativo', descripcion: 'Error en el sistema' },
-    { id: 7, categoria: 'Operativo', descripcion: 'Error en la planificación' },
-    { id: 8, categoria: 'Operativo', descripcion: 'Error de hardware' },
-    { id: 9, categoria: 'Operativo', descripcion: 'Error de comunicación' },
-    { id: 10, categoria: 'Operativo', descripcion: 'Error de equipo' },
-    { id: 11, categoria: 'Tecnológico', descripcion: 'Actualizar librerías/api a última versión' },
-    { id: 12, categoria: 'Tecnológico', descripcion: 'Cambiar el IDE de desarrollo' },
-    { id: 13, categoria: 'Tecnológico', descripcion: 'Explora implementación alternativa' },
-    { id: 14, categoria: 'Tecnológico', descripcion: 'Cambia de librería/api de desarrollo' },
-    { id: 15, categoria: 'Tecnológico', descripcion: 'Cambia de entorno de desarrollo' },
-    { id: 16, categoria: 'Proyecto', descripcion: 'Desarrollador con licencia' },
-    { id: 17, categoria: 'Proyecto', descripcion: 'Cambiar el horario de reunión' },
-    { id: 18, categoria: 'Proyecto', descripcion: 'Intercambia un desarrollador(a) a otro proyecto' },
-    { id: 19, categoria: 'Proyecto', descripcion: 'Priorizar un solo proyecto' },
-    { id: 20, categoria: 'Proyecto', descripcion: 'Grupo en congeladora' },
-    { id: 21, categoria: 'Personal', descripcion: 'Desarrollador con actividad personal' },
-    { id: 22, categoria: 'Personal', descripcion: 'Desarrollador genera conflicto grupal' },
-    { id: 23, categoria: 'Personal', descripcion: 'Desarrollador prioriza tareas administrativas de proyecto' },
-    { id: 24, categoria: 'Personal', descripcion: 'Desarrollador genera malestar invididual' },
-    { id: 25, categoria: 'Personal', descripcion: 'Solicita cambio de SM/JP' },
-]
+const updateRouletteContent = (roulette_content) => {
+    emit('update:roulette_content', roulette_content);
+};
 
-// Extraer las categorías únicas
-const categorias = computed(() => [...new Set(incidencias.map(i => i.categoria))])
+// Variables
+const incidencias = ref([]);
+const categorias = ref([]);
+const integrantes = ref([]);
+// Obtener Lista de incidencias
+const getIncidencias = async () => {
+    try {
+        const response = await fetch(`${API_URL}/api/incidencias/`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!response.ok) {
+            console.error("Status:", response.status);
+            throw new Error(
+                `Error en la respuesta del servidor: ${response.statusText}`
+            );
+        };
+        const data = await response.json();
+        incidencias.value = data;
+		categorias.value = [...new Set(data.map(i => i.categoria))];
+		updateRouletteContent(categorias.value);
+    } catch (err) {
+        console.error("Error fetching incidencias:", err);
+    }
+};
+
+// Función para obtener las subcategorías de una categoría
+function getSubcategorias(categoria) {
+	return incidencias.value.filter(i => i.categoria === categoria);
+};
+
+function getIntegrantes(grupo) {
+	// Filtrar los integrantes del grupo seleccionado
+	return integrantes.value.filter(i => i.grupo === grupo);
+};
+
 
 // Algoritmo Xorshift
 function xorshift() {
-    let x = seed.value >>> 0
-    x ^= x << 13
-    x ^= x >> 17
-    x ^= x << 5
-    seed.value = x >>> 0
-    return seed.value
-}
+	const seed = ref(Date.now());
+	const min = 1;
+	const max = 1000;
+	let x = seed.value >>> 0
+	x ^= x << 13
+	x ^= x >> 17
+	x ^= x << 5
+	const normalized = (x >>> 0) / 2 ** 32;
+	return Math.floor(min + normalized * (max - min + 1));
+};
 
+const categoriaSeleccionada = ref(null);
+const incidenciaSeleccionada = ref(null);
+const alumnoSeleccionado = ref(null);
 // Función para generar categoría e incidencia aleatoria
 function generarIncidenciaAleatoria() {
-    // Elegir categoría aleatoria
-    const indiceCategoria = xorshift() % categorias.value.length
-    categoriaSeleccionada.value = categorias.value[indiceCategoria]
+	// Elegir categoría aleatoria
+	const indiceCategoria = xorshift() % categorias.value.length;
+	categoriaSeleccionada.value = categorias.value[indiceCategoria];
 
-    // Filtrar incidencias por categoría
-    const incidenciasPorCategoria = incidencias.filter(i => i.categoria === categoriaSeleccionada.value)
+	// Filtrar incidencias por categoría
+	const incidenciasPorCategoria = getSubcategorias(categoriaSeleccionada.value);
+	
+	// Elegir una incidencia aleatoria dentro de esa categoría
+	const indiceIncidencia = xorshift() % incidenciasPorCategoria.length;
+	incidenciaSeleccionada.value = incidenciasPorCategoria[indiceIncidencia];
 
-    // Elegir una incidencia aleatoria dentro de esa categoría
-    const indiceIncidencia = xorshift() % incidenciasPorCategoria.length
-    incidenciaSeleccionada.value = incidenciasPorCategoria[indiceIncidencia]
-}
+	// Obtener los integrantes del grupo seleccionado
+	const integrantesDelGrupo = getIntegrantes(grupoSeleccionado.value)
+
+	// Elegir un integrante aleatorio
+    const alumnoSeleccionado = xorshift() % integrantesDelGrupo.length;
+	alumnoSeleccionado.value = integrantesDelGrupo[alumnoSeleccionado];
+
+};
+
+onMounted(() => {
+	getIncidencias();
+});
 </script>
 
 <template>
-  <section class="flex flex-col justify-center items-center w-full h-full gap-2 text-center">
-    <button
-      class="bg-zinc-50 text-zinc-900 font-medium text-base py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap"
-      @click="generarIncidenciaAleatoria"
-    >
-      Generar Incidencia
-    </button>
+	<section class="flex flex-col justify-center items-center w-full h-full gap-2 text-center">
+		<button
+			class="bg-zinc-50 text-zinc-900 font-medium text-base py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap"
+			@click="generarIncidenciaAleatoria">
+			Generar Incidencia
+		</button>
 
-    <div v-if="incidenciaSeleccionada">
-      <p class="font-semibold text-lg">Categoría: {{ categoriaSeleccionada }}</p>
-      <p class="text-zinc-700">Descripción: {{ incidenciaSeleccionada.descripcion }}</p>
-    </div>
-  </section>
+		<div v-if="incidenciaSeleccionada">
+			<p class="font-semibold text-lg">Categoría: {{ categoriaSeleccionada }}</p>
+			<p class="text-zinc-700">Subcategoría: {{ incidenciaSeleccionada.subcategoria }}</p>
+		</div>
+	</section>
 </template>

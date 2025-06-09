@@ -65,7 +65,7 @@ const semestreOptions = computed(() => {
 // Función para crear una nueva instancia
 const postInstancia = async () => {
     try {
-        const response = await fetch(API_URL + `/api/instancias/`, {
+        const response = await fetch(`${API_URL}/api/instancias/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -78,7 +78,7 @@ const postInstancia = async () => {
         if (!response.ok) {
             console.error("Status:", response.status);
             throw new Error(
-                "Error en la respuesta del servidor: " + response.statusText
+                `Error en la respuesta del servidor: ${response.statusText}`
             );
         }
         const data = await response.json();
@@ -106,7 +106,7 @@ const updateInstancias = (instancia) => {
                 </header>
                 <div class="flex flex-col items-start w-full gap-1">
                     <label for="semestre" class="block text-sm font-bold">Semestre</label>
-                    <select id="semestre" v-model="semestre" required class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-white outline-none">
+                    <select v-model="semestre" required class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-white outline-none">
                         <option value="" disabled selected>Selecciona un semestre</option>
                         <option v-for="option in semestreOptions" :key="option" :value="option">
                             {{ option }}
@@ -151,7 +151,7 @@ select {
 select::picker-icon {
     width: 24px;
     height: 24px;
-    content: url("../assets/chevron-down.svg");
+    content: url("../../assets/chevron-down.svg");
     transition: 0.3s rotate;
 }
 
