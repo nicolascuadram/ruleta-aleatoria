@@ -12,7 +12,7 @@ const updateRouletteContent = (roulette_content) => {
 // Variables
 const incidencias = ref([]);
 const categorias = ref([]);
-
+const integrantes = ref([]);
 // Obtener Lista de incidencias
 const getIncidencias = async () => {
     try {
@@ -42,6 +42,12 @@ function getSubcategorias(categoria) {
 	return incidencias.value.filter(i => i.categoria === categoria);
 };
 
+function getIntegrantes(grupo) {
+	// Filtrar los integrantes del grupo seleccionado
+	return integrantes.value.filter(i => i.grupo === grupo);
+};
+
+
 // Algoritmo Xorshift
 function xorshift() {
 	const seed = ref(Date.now());
@@ -57,7 +63,7 @@ function xorshift() {
 
 const categoriaSeleccionada = ref(null);
 const incidenciaSeleccionada = ref(null);
-
+const alumnoSeleccionado = ref(null);
 // Función para generar categoría e incidencia aleatoria
 function generarIncidenciaAleatoria() {
 	// Elegir categoría aleatoria
@@ -66,10 +72,18 @@ function generarIncidenciaAleatoria() {
 
 	// Filtrar incidencias por categoría
 	const incidenciasPorCategoria = getSubcategorias(categoriaSeleccionada.value);
-
+	
 	// Elegir una incidencia aleatoria dentro de esa categoría
 	const indiceIncidencia = xorshift() % incidenciasPorCategoria.length;
 	incidenciaSeleccionada.value = incidenciasPorCategoria[indiceIncidencia];
+
+	// Obtener los integrantes del grupo seleccionado
+	const integrantesDelGrupo = getIntegrantes(grupoSeleccionado.value)
+
+	// Elegir un integrante aleatorio
+    const alumnoSeleccionado = xorshift() % integrantesDelGrupo.length;
+	alumnoSeleccionado.value = integrantesDelGrupo[alumnoSeleccionado];
+
 };
 
 onMounted(() => {

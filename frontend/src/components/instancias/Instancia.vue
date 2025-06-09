@@ -35,12 +35,16 @@ const categoria_seleccionada = ref(null);
 const subcategoria_seleccionada = ref(null);
 
 const actualizarRuleta = (resultado) => {
+	console.log("Resultado de la ruleta:")
 	if (categorias.value.includes(resultado)) {
+		
 		categoria_seleccionada.value = resultado;
 		contenido_ruleta.value = getSubcategorias(resultado);
 		contenido_boton.value = "Seleccionar Subcategoría";
-		console.log(getSubcategorias(resultado));
+
 	} else {
+
+		no_hay_subcategoria.value = false;
 		// Mostrar botón para:
 		// 1. Finalizar ejecución
 		// 2. Girar ruleta de alumnos de un equipo (seleccionar equipo)
@@ -50,9 +54,11 @@ const actualizarRuleta = (resultado) => {
 
 // Variables
 const incidencias = ref([]);
+const equipos = ref([]);
 const categorias = ref([]);
 const subcategorias = ref([]);
-const equipo_seleccionado = ref(null);
+const equipo_seleccionado = ref('');
+const alumnosdelequipo = ref([]);
 const contenido_ruleta = ref([]);
 const resultado_ruleta = ref(null);
 const contenido_boton = ref(null);
@@ -79,19 +85,82 @@ const getIncidencias = async () => {
 		subcategorias.value = data.map(i => i.subcategoria);
 		contenido_ruleta.value = categorias.value;
 		contenido_boton.value = "Seleccionar Categoría";
+	
 		console.log(`Categorias: ${categorias.value}`);
 		console.log(`Subcategorias: ${subcategorias.value}`);
 		console.log(`Contenido Ruleta: ${contenido_ruleta.value}`);
+		
 	} catch (err) {
 		console.error("Error fetching incidencias:", err);
 	}
 };
 
+// Función para obtener los equipos de la instancia desde la API
+const getEquipos = async () => {
+    try {
+        const response = await fetch(`${API_URL}/api/instancias/${props.id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!response.ok) {
+            console.error("Status:", response.status);
+            throw new Error(
+                `Error en la respuesta del servidor: ${response.statusText}`
+            );
+        }
+        const data = await response.json();
+        equipos.value = data;
+    } catch (err) {
+        console.error("Error fetching equipos:", err);
+    }
+};
+// Función para obtener los alumnos de un grupo desde la API
+const getAlumnos = async () => {
+    try {
+        const response = await fetch(`${API_URL}/api/grupos/${equipo_seleccionado.value}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!response.ok) {
+            console.error("Status:", response.status);
+            throw new Error(
+                `Error en la respuesta del servidor: ${response.statusText}`
+            );
+        }
+        const data = await response.json();
+        alumnosdelequipo.value = data;
+
+		console.log(data)
+		console.log("este es data")
+    } catch (err) {
+        console.error("Error fetching alumnos:", err);
+    }
+};
 // Función para obtener las subcategorías de una categoría
 function getSubcategorias(categoria) {
 	return incidencias.value
 		.filter(i => i.categoria === categoria)
 		.map(i => i.subcategoria);
+}
+function cargarEquipos(){
+	contenido_ruleta.value = equipos.value.map(equipo => equipo.nombre);
+}
+async function cargarAlumnosequipo() {
+	try {
+		await getAlumnos(); // Espera los datos del equipo
+		console.log("Datos completos del equipo:", alumnosdelequipo.value);
+
+		// Extrae solo los nombres
+		contenido_ruleta.value = alumnosdelequipo.value.map(alumno => alumno.nombre);
+
+		console.log("Nombres de los integrantes:", contenido_ruleta.value);
+	} catch (error) {
+		console.error("Error al cargar alumnos del equipo:", error);
+	}
 }
 
 // Algoritmo Xorshift
@@ -112,9 +181,19 @@ function generarResultado(opciones) {
 	const indice_resultado = xorshift() % opciones.value.length;
 	return opciones.value[indice_resultado];
 };
+const actualizar_equipo = (resultado) => {
+	// Aquí se debe actualizar el equipo seleccionado
+	// Por ejemplo, si se selecciona un equipo en el componente Equipos,
+	// se debe actualizar la variable equipo_seleccionado.
+	equipo_seleccionado.value = resultado;
+	console.log("Equipo seleccionado actualizado:", resultado);
+}
+
+
 
 onMounted(() => {
 	getIncidencias();
+	getEquipos();
 });
 </script>
 
@@ -128,7 +207,9 @@ onMounted(() => {
 				<Historial :id="id" />
 			</div>
 			<!-- Lista de Equipos de la Instancia -->
-			<Equipos :id="id" />
+			<Equipos :id="id" :equipos="equipos" @equipo_seleccionado="actualizar_equipo"   />
+
+			
 		</div>
 		<!-- Lado Central -->
 		<div class="w-full md:basis-2/4 grow h-full">
@@ -153,13 +234,13 @@ onMounted(() => {
 				<button
 					class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
 					disabled:bg-zinc-600 disabled:cursor-not-allowed"
-					type="button" :disabled="no_hay_subcategoria">
+					type="button" @click="cargarAlumnosequipo" :disabled="no_hay_subcategoria">
 					Girar Alumnos
 				</button>
 				<button
 					class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
 					disabled:bg-zinc-600 disabled:cursor-not-allowed"
-					type="button" :disabled="no_hay_subcategoria">
+					type="button" @click="cargarEquipos" :disabled="no_hay_subcategoria">
 					Girar Equipos
 				</button>
 			</div>
