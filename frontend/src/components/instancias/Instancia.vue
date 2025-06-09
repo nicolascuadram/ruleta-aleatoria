@@ -44,6 +44,8 @@ const actualizarRuleta = (resultado) => {
 
 	} else {
 
+		subcategoria_seleccionada.value = resultado;
+		console.log("Categoria seleccionada:", categoria_seleccionada.value);
 		no_hay_subcategoria.value = false;
 		// Mostrar botón para:
 		// 1. Finalizar ejecución
