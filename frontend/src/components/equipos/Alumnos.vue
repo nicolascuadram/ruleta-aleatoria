@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { User } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -13,20 +13,23 @@ const API_URL = import.meta.env.PUBLIC_API_URL;
 const alumnos = ref(null);
 
 // Función para obtener los alumnos de un grupo desde la API
-const getAlumnos = async () => {
+const getAlumnos = async (grupoId) => {
+    if (!grupoId) return;
+
     try {
-        const response = await fetch(`${API_URL}/api/grupos/${props.id}`, {
+        alumnos.value = null; // Opcional: muestra el loader mientras se carga
+        const response = await fetch(`${API_URL}/api/grupos/${grupoId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
         });
+
         if (!response.ok) {
             console.error("Status:", response.status);
-            throw new Error(
-                `Error en la respuesta del servidor: ${response.statusText}`
-            );
+            throw new Error(`Error en la respuesta del servidor: ${response.statusText}`);
         }
+
         const data = await response.json();
         alumnos.value = data;
     } catch (err) {
@@ -34,14 +37,20 @@ const getAlumnos = async () => {
     }
 };
 
+// Llama la primera vez
 onMounted(() => {
-    getAlumnos();
+    getAlumnos(props.id);
+});
+
+// Vuelve a llamar si cambia el id
+watch(() => props.id, (newId) => {
+    getAlumnos(newId);
 });
 </script>
 
 <template>
     <!-- Lista de alumnos -->
-    <section v-if="alumnos" class="flex flex-col items-start justify-start w-full gap-2">
+    <section v-if="alumnos && alumnos.length" class="flex flex-col items-start justify-start w-full gap-2">
         <h2 class="text-base font-semibold">Integrantes:</h2>
         <div class="flex flex-col items-center justify-start w-full border-b border-zinc-700">
             <div v-for="alumno in alumnos" :key="alumno.id" class="flex justify-start items-center w-full p-2 gap-2 border-t border-zinc-700">

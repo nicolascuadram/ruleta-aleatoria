@@ -45,8 +45,13 @@ watch(equipoSeleccionado, (nuevoValor) => {
                 </select>
             </div>
             <!-- Equipo seleccionado -->
-            <div v-if="equipoSeleccionado" class="flex flex-col justify-start items-start w-full bg-zinc-900 border border-zinc-700 rounded-md shadow-md p-4">
-                <Alumnos :id="equipoSeleccionado" />
+            <div v-if="equipoSeleccionado" class="w-full max-w-2xl mt-4 bg-zinc-900 border border-zinc-700 rounded-xl shadow-lg p-6 space-y-4 transition-all duration-300">
+                <h2 class="text-lg font-semibold text-zinc-100">
+                    Equipo Seleccionado
+                </h2>
+                <div class="bg-zinc-800 rounded-md p-4">
+                    <Alumnos :id="equipoSeleccionado" />
+                </div>
             </div>
         </div>
         <div v-else class="flex justify-center items-center w-full h-full">
