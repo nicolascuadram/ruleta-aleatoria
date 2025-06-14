@@ -30,7 +30,7 @@ const subcategoria_seleccionada = ref(null);
 
 const contenido_ruleta = ref([]);
 const hay_subcategoria = ref(false);
-const observacion = ref('');
+const comentario = ref('');
 
 // Obtener Lista de incidencias
 const getIncidencias = async () => {
@@ -182,13 +182,13 @@ onMounted(() => {
 					<p><strong class="font-semibold">Subcategoría:</strong> {{ subcategoria_seleccionada }}</p>
 				</div>
 
-				<!-- Textarea de Observación -->
+				<!-- Textarea de Comentario -->
 				<div class="mt-4">
-					<label for="observacion" class="block text-sm font-medium text-white mb-1">Observación:</label>
+					<label for="comentario" class="block text-sm font-medium text-white mb-1">Comentario:</label>
 					<textarea
-						id="observacion"
-						v-model="observacion"
-						placeholder="Escribe tu observación aquí..."
+						id="comentario"
+						v-model="comentario"
+						placeholder="Escribe tu comentario aquí..."
 						rows="4"
 						class="w-full p-2 rounded-md border border-zinc-600 bg-zinc-800 text-white resize-none shadow-inner"
 					></textarea>
@@ -200,7 +200,7 @@ onMounted(() => {
 					disabled:bg-zinc-600 disabled:cursor-not-allowed"
 					type="button"
 					:disabled="!hay_subcategoria"
-					@click="console.log('Observación:', observacion)"
+					@click="console.log('Comentario:', comentario)"
 				>
 					Finalizar Ejecución
 				</button>
