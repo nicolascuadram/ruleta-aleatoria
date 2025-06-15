@@ -31,6 +31,7 @@ const subcategoria_seleccionada = ref(null);
 const contenido_ruleta = ref([]);
 const hay_subcategoria = ref(false);
 const comentario = ref('');
+const can_spin = ref(false);
 
 // Obtener Lista de incidencias
 const getIncidencias = async () => {
@@ -120,6 +121,7 @@ async function cargarAlumnosequipo() {
 // Actualizar equipo desde componente hijo
 const actualizar_equipo = (resultado) => {
 	equipo_seleccionado.value = resultado;
+	can_spin.value = true;
 }
 
 // Actualizar ruleta según resultado
@@ -154,7 +156,7 @@ onMounted(() => {
 
 		<!-- Lado Central -->
 		<div class="w-full md:basis-2/4 grow h-full">
-			<Ruleta3 :items="contenido_ruleta" @result="actualizarRuleta" />
+			<Ruleta3 :canSpin="can_spin" :items="contenido_ruleta" @result="actualizarRuleta" />
 		</div>
 
 		<!-- Lado Derecho -->
