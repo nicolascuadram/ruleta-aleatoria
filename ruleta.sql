@@ -40,11 +40,11 @@ INSERT INTO instancia (semestre, profesor) VALUES
 ('2024-1', 'Luis Silvestre'),
 ('2024-2', 'Luis Silvestre');
 
-INSERT INTO grupo (nombre,proyecto1,proyecto2,ref_instancia) VALUES
-('Equipo Alfa','proyecto1','proyecto2', 1),
-('Equipo Beta','proyecto1','proyecto2', 1),
-('Equipo Gamma','proyecto1','proyecto3', 2),
-('Equipo Delta','proyecto1','proyecto4', 2);
+INSERT INTO grupo (nombre, proyecto1, proyecto2, ref_instancia) VALUES
+('Equipo Alfa', 'Ruleta', 'Crawlers', 1),
+('Equipo Beta', 'Auto', 'Robot', 1),
+('Equipo Gamma', 'Tablero', 'Ruleta', 2),
+('Equipo Delta', 'Auto', 'Tablero', 2);
 
 INSERT INTO alumno (nombre, ref_grupo) VALUES
 ('Ana Torres', 1),

@@ -16,7 +16,7 @@ export const getQueries = {
 
 export const postQueries = {
     AddInstancia: "INSERT INTO instancia (semestre, profesor) VALUES ($1, $2) RETURNING *",
-    AddGrupo: "INSERT INTO grupo (ref_instancia, nombre) VALUES ($1, $2) RETURNING *",
+    AddGrupo: "INSERT INTO grupo (ref_instancia, nombre, proyecto1,proyecto2 ) VALUES ($1, $2,$3,$4) RETURNING *",
     AddAlumno: "INSERT INTO alumno (ref_grupo, nombre) VALUES ($1, $2) RETURNING *",
     AddIncidencia: "INSERT INTO incidencia (ref_instancia, categoria, subcategoria) VALUES ($1, $2, $3) RETURNING *",
     AddRegistro: "INSERT INTO registro (ref_incidencia, ref_grupo, alumnoescogido, grupo_intercambio, alumno_intercambio ,fecha, comentario) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, $6) RETURNING *",
