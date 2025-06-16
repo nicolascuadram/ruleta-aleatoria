@@ -103,9 +103,10 @@ function getSubcategorias(categoria) {
 		.map(i => i.subcategoria);
 };
 
-// Cargar equipos a la ruleta
+// Cargar equipos a la ruleta boton Girar Equipos
 function cargarEquipos() {
 	contenido_ruleta.value = equipos.value.map(equipo => equipo.nombre);
+	can_spin.value = true;
 };
 
 // Cargar alumnos del equipo
@@ -123,7 +124,7 @@ const actualizar_equipo = (resultado) => {
 	equipo_seleccionado.value = resultado;
 	can_spin.value = true;
 }
-
+const equipoEncontrado = equipos.value.find(e => e.nombre === resultado);
 // Actualizar ruleta según resultado
 const actualizarRuleta = (resultado) => {
 	if (categorias.value.includes(resultado)) {
@@ -134,7 +135,20 @@ const actualizarRuleta = (resultado) => {
 		console.log("Categoria seleccionada:", categoria_seleccionada.value);
 		hay_subcategoria.value = true;
 	}
+	// Si el resultado es un equipo, actualizar el contenido de la ruleta con los equipos
+	const equipoEncontrado = equipos.value.find(e => e.nombre === resultado);
+	if (equipoEncontrado) {
+		equipo_seleccionado.value = equipoEncontrado.id;
+		// Cargar alumnos del equipo sorteado
+		getAlumnos(equipoEncontrado.id).then(() => {
+			contenido_ruleta.value = alumnosdelequipo.value.map(alumno => alumno.nombre);
+		});
+
+		return;
+	}
 }
+
+// Actualizar ruleta de equipos
 
 // Al montar el componente
 onMounted(() => {
@@ -171,9 +185,25 @@ onMounted(() => {
 				<button
 					class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
 					disabled:bg-zinc-600 disabled:cursor-not-allowed"
-					type="button" @click="cargarEquipos" :disabled="!hay_subcategoria">
+					type="button" @click="cargarEquipos">
 					Girar Equipos
 				</button>
+				<button
+					class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
+					disabled:bg-zinc-600 disabled:cursor-not-allowed"
+					type="button"
+					@click="() => {
+						if (!equipo_seleccionado) {
+							can_spin = false;
+							return;
+						}
+						getIncidencias();
+					}"
+					:disabled="!equipo_seleccionado"
+				>
+					Girar Incidencias
+				</button>
+				
 			</div>
 
 			<!-- Resumen de la Ejecución -->
