@@ -67,6 +67,7 @@ router.get('/registros', async(req, res) => {
    }
 })
 
+
 //Obtener los grupos asociados a una instancia, mediante el id de la instancia
 router.get('/instancias/:id', async(req, res) => {
    try {
