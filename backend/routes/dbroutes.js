@@ -112,13 +112,75 @@ router.get('/historial', async (req, res) => {
     }
 });
 
+router.get('/instancia/:id/semanas', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query(
+            'SELECT nro_semanas FROM instancia WHERE id = $1',
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Instancia no encontrada' });
+        }
+
+        res.json({ nro_semanas: result.rows[0].nro_semanas });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener semanas de la instancia' });
+    }
+});
+
+router.get('/instancia/:id/semana/:semana/grupos-ejecutados', async (req, res) => {
+    const { id, semana } = req.params;
+    try {
+        const result = await pool.query(`
+            SELECT DISTINCT g.id, g.nombre
+            FROM grupo g
+            JOIN registro r ON g.id = r.ref_grupo
+            WHERE g.ref_instancia = $1 AND r.semana = $2
+        `, [id, semana]);
+
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener grupos ejecutados en la semana' });
+    }
+});
+
+router.get('/instancia/:id/semanas-completas', async (req, res) => {
+    const { id } = req.params;
+    try {
+        // Obtener cantidad total de grupos en la instancia
+        const grupoCountResult = await pool.query(
+            'SELECT COUNT(*) FROM grupo WHERE ref_instancia = $1',
+            [id]
+        );
+        const totalGrupos = parseInt(grupoCountResult.rows[0].count);
+
+        // Obtener todas las semanas en las que ese número de grupos ya registraron
+        const semanasCompletasResult = await pool.query(`
+            SELECT semana
+            FROM registro r
+            JOIN grupo g ON r.ref_grupo = g.id
+            WHERE g.ref_instancia = $1
+            GROUP BY semana
+            HAVING COUNT(DISTINCT r.ref_grupo) = $2
+            ORDER BY semana
+        `, [id, totalGrupos]);
+
+        res.json(semanasCompletasResult.rows.map(row => row.semana));
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener semanas completas' });
+    }
+});
+
+
 
 
 // POTICIONES POST
 router.post('/instancias', async (req, res) => {
     try {
-        const { semestre, profesor } = req.body;
-        const result = await pool.query(postQueries.AddInstancia, [semestre, profesor]);
+        const { semestre, profesor, nro_semanas } = req.body;
+        const result = await pool.query(postQueries.AddInstancia, [semestre, profesor, nro_semanas]);
         res.status(201).json(result.rows[0]);
     } catch (error) {
         res.status(500).json({ error: "Error al crear la instancia" });
@@ -158,8 +220,8 @@ router.post('/incidencias', async (req, res) => {
 router.post('/registros/:id', async(req, res) => {
    try {
        const { id } = req.params;
-       const { ref_incidencia, ref_grupo, alumno_escogido, grupo_intercambio, alumno_intercambio, comentario } = req.body;
-       const result = await pool.query(postQueries.AddRegistro, [ref_incidencia, ref_grupo, alumno_escogido, grupo_intercambio, alumno_intercambio, comentario]);
+       const { ref_incidencia, ref_grupo, alumno_escogido, grupo_intercambio, alumno_intercambio, comentario, semana } = req.body;
+       const result = await pool.query(postQueries.AddRegistro, [ref_incidencia, ref_grupo, alumno_escogido, grupo_intercambio, alumno_intercambio, comentario, semana]);
        console.log('Registro insertado:', result.rows);
        res.json(result.rows);
    } catch (error) {

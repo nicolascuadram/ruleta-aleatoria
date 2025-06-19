@@ -1,11 +1,9 @@
 <script setup>
-import { ref, onUnmounted, watch, onMounted } from 'vue';
+import { ref, computed, onUnmounted, watch, onMounted } from 'vue';
 import CardRegistro from './CardRegistro.vue';
+
 const API_URL = import.meta.env.PUBLIC_API_URL;
 
-/* LÓGICA DEL MODAL */
-
-// Recibe la propiedad isModalOpen
 const props = defineProps({
     isModalOpen: Boolean,
     id: {
@@ -14,23 +12,14 @@ const props = defineProps({
     },
 });
 
-// Emitir eventos
 const emit = defineEmits(['close-modal']);
 
-// Referencia al modal
 const modalContentRef = ref(null);
 
-// Función para cerrar el modal
-const closeModal = () => {
-    emit('close-modal');
-};
+const closeModal = () => emit('close-modal');
 
-// Cerrar el modal con la tecla Escape
-const handleEscape = (e) => {
-    if (e.key === 'Escape') closeModal();
-};
+const handleEscape = (e) => { if (e.key === 'Escape') closeModal(); };
 
-// Cerrar al hacer clic fuera del modal
 const handleClickOutside = (e) => {
     if (modalContentRef.value && !modalContentRef.value.contains(e.target)) {
         closeModal();
@@ -52,31 +41,38 @@ onUnmounted(() => {
     window.removeEventListener('mousedown', handleClickOutside);
 });
 
-/* LÓGICA DEL COMPONENTE ESPECÍFICO */
+const registros = ref([]);
+const nroSemanas = ref(0);
+const semanaSeleccionada = ref("");
 
-const registros = ref(null);
-
-// Función para obtener los registros del historial
+// Obtener registros
 const getHistorial = async () => {
     try {
-        const response = await fetch(`${API_URL}/api/registros/${props.id}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        if (!response.ok) {
-            console.error("Status:", response.status);
-            throw new Error(
-                `Error en la respuesta del servidor: ${response.statusText}`
-            );
-        }
+        const response = await fetch(`${API_URL}/api/registros/${props.id}`);
         const data = await response.json();
         registros.value = data;
+        console.log("registros: ", registros.value)
     } catch (err) {
         console.error("Error obteniendo historial:", err);
     }
 };
+
+// Obtener cantidad de semanas
+const getNumeroSemanas = async () => {
+    try {
+        const response = await fetch(`${API_URL}/api/instancia/${props.id}/semanas`);
+        const data = await response.json();
+        nroSemanas.value = data.nro_semanas;
+    } catch (err) {
+        console.error("Error obteniendo nro_semanas:", err);
+    }
+};
+
+const registrosFiltrados = computed(() => {
+    console.log(semanaSeleccionada.value)
+    if (!semanaSeleccionada.value) return registros.value;
+    return registros.value.filter(r => r.semana === parseInt(semanaSeleccionada.value));
+});
 
 const formattedDate = (dateString) => {
     const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
@@ -86,24 +82,30 @@ const formattedDate = (dateString) => {
 
 onMounted(() => {
     getHistorial();
+    getNumeroSemanas();
 });
+
 </script>
 
 <template>
-    <section role="dialog" aria-modal="true" v-if="isModalOpen" class="fixed inset-0 flex items-start justify-center bg-[#000000dd] z-50 py-8 overflow-y-scroll hide-scrollbar">
-        <div ref="modalContentRef" class="flex flex-col w-2/3 justify-start items-center rounded-md px-6 py-4 bg-zinc-950 border border-zinc-700">
+    <section role="dialog" aria-modal="true" v-if="isModalOpen"
+        class="fixed inset-0 flex items-start justify-center bg-[#000000dd] z-50 py-8 overflow-y-scroll hide-scrollbar">
+
+        <div ref="modalContentRef"
+            class="flex flex-col w-2/3 justify-start items-center rounded-md px-6 py-4 bg-zinc-950 border border-zinc-700">
             <!-- Lista de registros -->
+            <select v-model="semanaSeleccionada"
+                class="w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-zinc-50 outline-none mb-4">
+                <option value="">Todas las semanas</option>
+                <option v-for="n in nroSemanas" :key="n" :value="n">Semana {{ n }}</option>
+            </select>
             <div class="flex flex-col items-center justify-start w-full h-full p-4 gap-4">
                 <h1 class="text-2xl font-semibold">Historial</h1>
                 <div class="flex flex-wrap gap-4 w-full h-full">
-                    <CardRegistro v-for="registro in registros" :key="registro.id" 
-                        :categoria="registro.tipo_incidencia"
-                        :incidencia="registro.incidencia"
-                        :grupo="registro.grupo"
-                        :alumno="registro.alumno"
-                        :fecha="formattedDate(registro.fecha)"
-                        :comentario="registro.comentario"
-                    />
+                    <CardRegistro v-for="registro in registrosFiltrados" :key="registro.id"
+                        :categoria="registro.tipo_incidencia" :incidencia="registro.incidencia" :grupo="registro.grupo"
+                        :alumno="registro.alumno" :fecha="formattedDate(registro.fecha)"
+                        :comentario="registro.comentario" />
                 </div>
             </div>
         </div>

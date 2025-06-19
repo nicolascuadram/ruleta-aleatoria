@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { User, SquareKanban } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -11,7 +11,7 @@ const props = defineProps({
         type: Array,
         default: () => [],
         required: true,
-    },
+    }
 });
 
 // Emits
@@ -50,6 +50,7 @@ watch(equipoSeleccionado, (nuevoValor) => {
     getAlumnos(nuevoValor.id);
     emit('equipo_seleccionado', nuevoValor.id);
 });
+
 </script>
 
 <template>
@@ -60,8 +61,9 @@ watch(equipoSeleccionado, (nuevoValor) => {
                 <select v-model="equipoSeleccionado"
                     class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-zinc-50 outline-none">
                     <option value="" disabled selected>Selecciona un equipo</option>
-                    <option v-for="equipo in equipos" :key="equipo.id" :value="equipo">
+                    <option v-for="equipo in equipos" :key="equipo.id" :value="equipo" :disabled="equipo.yaEjecutado">
                         {{ equipo.nombre }}
+                        <span v-if="equipo.yaEjecutado"> (ya ejecutado)</span>
                     </option>
                 </select>
             </div>

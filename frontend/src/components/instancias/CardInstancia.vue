@@ -18,6 +18,10 @@ defineProps({
 		type: String,
 		required: true,
 	},
+	nro_semanas:{
+		type: Number,
+		required: true
+	}
 });
 </script>
 <template>
@@ -25,12 +29,16 @@ defineProps({
 		<header class="flex flex-col items-start text-start w-full">
 			<h1 class="text-lg font-semibold leading-snug">{{ titulo }}</h1>
 			<h2 class="text-sm font-medium text-zinc-300">{{ semestre }}</h2>
+			<p class="text-xs font-medium text-left">N° de semanas {{ nro_semanas}}</p>
 		</header>
+
 		<aside class="flex justify-start items-center gap-2 text-center w-full">
 			<span class="flex justify-center items-center gap-2 px-2 py-1 bg-zinc-50 text-zinc-900 font-medium rounded-md shadow-md">
 				<UserPen color="#18181b" size="20"/>
 				<p class="text-xs font-medium">{{ profesor }}</p>
 			</span>
+
 		</aside>
+
 	</a>
 </template>

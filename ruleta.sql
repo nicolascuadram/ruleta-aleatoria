@@ -89,3 +89,8 @@ INSERT INTO registro (ref_incidencia, ref_grupo, alumno_escogido, grupo_intercam
 (8, 2, NULL, NULL, NULL, CURRENT_TIMESTAMP - interval '3 days', 'Equipo Beta sin acceso a computadores'),
 (25, 2, 'María Ríos', NULL, NULL, CURRENT_TIMESTAMP, 'María cambia su rol a Scrum Master'),
 (18, 3, 'Tomás', 4, 'Sergio', CURRENT_TIMESTAMP, 'Equipo Gamma cambiará a Tomás por Sergio del Equipo Delta');
+
+
+ALTER TABLE instancia ADD COLUMN nro_semanas INTEGER CHECK (nro_semanas > 0);
+UPDATE instancia set nro_semanas = 18;
+ALTER TABLE registro ADD COLUMN semana INTEGER;
