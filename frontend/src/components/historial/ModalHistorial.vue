@@ -111,3 +111,56 @@ onMounted(() => {
         </div>
     </section>
 </template>
+
+<style scoped>
+/* Habilitar estilos personalizables para el select (Chrome) */
+select {
+    &,
+    &::picker(select) {
+        appearance: base-select;
+    }
+}
+
+/* Estilos del select */
+::picker(select) {
+    background-color: #18181b;
+    color: #ffffff;
+    border-radius: 6px;
+    border: 1px solid #3f3f46;
+    top: calc(anchor(bottom) + 2px);
+}
+
+/* Icono del select */
+select::picker-icon {
+    width: 24px;
+    height: 24px;
+    content: url("../../assets/chevron-down.svg");
+    transition: 0.3s rotate;
+}
+
+select:open::picker-icon {
+    rotate: 180deg;
+}
+
+/* Estilos de las opciones del select */
+select option {
+    background-color: #18181b;
+    color: #ffffff;
+    padding: 4px 8px;
+}
+
+select option:checked,
+select option:hover {
+    background-color: #fafafa;
+    color: #18181b;
+}
+
+select option:disabled {
+    background-color: #18181b;
+    color: #3f3f46;
+}
+
+option::checkmark {
+    display: none;
+}
+</style>
