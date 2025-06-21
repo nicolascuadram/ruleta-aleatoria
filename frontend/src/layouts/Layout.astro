@@ -7,25 +7,23 @@ import "../styles/global.css";
 
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Ruleta Aleatoria</title>
-  </head>
-  <body class="bg-zinc-950 text-zinc-50 h-screen overflow-hidden">
-    <div class="flex flex-col h-full">
-      <Navbar />
-      
-      <!-- Contenido principal -->
-      <main class="h-max flex flex-col overflow-hidden">
-        <slot />
-      </main>
-      
-      <Footer />
-    </div>
-  </body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Ruleta Aleatoria</title>
+	</head>
+	<body class="bg-zinc-950 text-zinc-50 h-screen overflow-hidden">
+		<div class="flex flex-col h-full">
+			<Navbar />
+			<!-- Contenido principal -->
+			<main class="h-max flex flex-col md:overflow-hidden">
+				<slot />
+			</main>
+			<Footer />
+		</div>
+	</body>
 </html>
 
 <style is:global>
