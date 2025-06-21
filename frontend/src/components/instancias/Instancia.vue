@@ -39,6 +39,7 @@ const contenido_ruleta = ref([]);
 const hay_subcategoria = ref(false);
 const comentario = ref('');
 const can_spin = ref(false);
+const isSpinning = ref(false);
 
 //########## para distinción por semana ##########
 const semanaSeleccionada = ref(0);
@@ -287,6 +288,10 @@ async function subirBackend() {
 	}
 }
 
+const updateSpinState = (state) => {
+	isSpinning.value = state;
+}
+
 const updateAll = () => {
 	getIncidencias();
 	getEquipos();
@@ -303,7 +308,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr] w-full overflow-y-scroll hide-scrollbar">
+	<div class="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr] w-full overflow-y-hidden hide-scrollbar">
 		<!-- Lado Izquierdo -->
 		<div class="flex flex-col p-4 md:overflow-y-scroll hide-scrollbar gap-4">
 			<div class="flex flex-wrap justify-start items-center gap-2">
@@ -327,7 +332,7 @@ onMounted(() => {
 		</div>
 
 		<!-- Lado Central -->
-		<Ruleta3 :canSpin="can_spin" :items="contenido_ruleta" @result="actualizarRuleta" />
+		<Ruleta3 :canSpin="can_spin" :items="contenido_ruleta" @result="actualizarRuleta" @isSpinning="updateSpinState" />
 
 		<!-- Lado Derecho -->
 		<div class="flex flex-col p-4 md:overflow-y-scroll hide-scrollbar gap-4">
@@ -340,20 +345,20 @@ onMounted(() => {
 							return;
 						}
 						getIncidencias();
-					}" :disabled="!equipo_seleccionado">
+					}" :disabled="!equipo_seleccionado || isSpinning">
 						Girar Incidencias
 					</button>
 					<button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
 						disabled:bg-zinc-600 disabled:cursor-not-allowed"
-						type="button" @click="cargarEquipos" :disabled="!alumno_seleccionado"
+						type="button" @click="cargarAlumnosequipo" :disabled="(!hay_subcategoria || (otro_equipo_seleccionado && !alumno_otro_equipo)) || isSpinning"
 					>
-						Girar Equipos
+						Girar Alumnos
 					</button>
 					<button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
 						disabled:bg-zinc-600 disabled:cursor-not-allowed"
-						type="button" @click="cargarAlumnosequipo" :disabled="!hay_subcategoria"
+						type="button" @click="cargarEquipos" :disabled="!alumno_seleccionado || isSpinning"
 					>
-						Girar Alumnos
+						Girar Equipos
 					</button>
 				</div>
 			</div>
@@ -382,7 +387,7 @@ onMounted(() => {
 						{{ subcategoria_seleccionada }}
 					</p>
 					<p v-if="alumno_seleccionado">
-						<strong class="font-semibold">Alumno: </strong>
+						<strong class="font-semibold">Alumno del equipo: </strong>
 						{{ alumno_seleccionado.nombre }}
 					</p>
 					<p v-if="otro_equipo_seleccionado">
@@ -390,7 +395,7 @@ onMounted(() => {
 						{{ equipos.find(e => e.id === otro_equipo_seleccionado)?.nombre }}
 					</p>
 					<p v-if="alumno_otro_equipo">
-						<strong class="font-semibold">Alumno otro equipo: </strong>
+						<strong class="font-semibold">Alumno de otro equipo: </strong>
 						{{ alumno_otro_equipo.nombre }}
 					</p>
 				</div>
