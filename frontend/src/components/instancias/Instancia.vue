@@ -105,6 +105,7 @@ const getIncidencias = async () => {
 			throw new Error(`Error en la respuesta del servidor: ${response.statusText}`);
 		}
 		const data = await response.json();
+		//console.log(data);
 		incidencias.value = data;
 		categorias.value = [...new Set(data.map(i => i.categoria))];
 		subcategorias.value = data.map(i => i.subcategoria);

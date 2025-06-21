@@ -1,6 +1,6 @@
 import { Router } from "express";
 import pool from "../db/db.js";
-import { getQueries, postQueries } from "../db/queries.js";
+import { getQueries, postQueries, deleteQueries} from "../db/queries.js";
 
 const router = Router();
 
@@ -16,16 +16,6 @@ router.get('/instancias', async(req, res) => {
 router.get('/incidencias', async(req, res) => {
    try {
        const result = await pool.query(getQueries.GetIncidencias);
-       res.json(result.rows);
-   } catch (error) {
-        res.status(500).json({error: "Error al obtener las incidencias"});
-   }
-})
-
-router.get('/incidencias/:id', async(req, res) => {
-   try {
-       const { id } = req.params;
-       const result = await pool.query(getQueries.GetIncidenciasByInstancia, [id]);
        res.json(result.rows);
    } catch (error) {
         res.status(500).json({error: "Error al obtener las incidencias"});
@@ -209,8 +199,8 @@ router.post('/alumnos', async (req, res) => {
 
 router.post('/incidencias', async (req, res) => {
     try {
-        const { ref_instancia,categoria, subcategoria} = req.body;
-        const result = await pool.query(postQueries.AddIncidencia, [ref_instancia, categoria, subcategoria]);
+        const {categoria, subcategoria} = req.body;
+        const result = await pool.query(postQueries.AddIncidencia, [categoria, subcategoria]);
         res.status(201).json(result.rows[0]);
     } catch (error) {
         res.status(500).json({ error: "Error al crear la incidencia" });
@@ -230,6 +220,15 @@ router.post('/registros/:id', async(req, res) => {
    }
 });
 
+//DELETE
+router.delete('/incidencias', async (req, res) => {
+    try {
+        const result = await pool.query(deleteQueries.deleteIncidencia);
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        res.status(500).json({ error: "Error al crear la incidencia" });
+    }
+});
 
 
 export default router;
