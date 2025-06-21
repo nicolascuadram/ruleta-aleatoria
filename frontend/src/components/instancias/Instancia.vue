@@ -62,7 +62,7 @@ const cargarSemanasCompletas = async () => {
 		const response = await fetch(`${API_URL}/api/instancia/${props.id}/semanas-completas`);
 		const data = await response.json();
 		semanasCompletas.value = data;
-		console.log(semanasCompletas.value , " semanas completas")
+		console.log(semanasCompletas.value, " semanas completas")
 	} catch (error) {
 		console.error("Error al obtener semanas completas:", error);
 	}
@@ -287,7 +287,7 @@ async function subirBackend() {
 	}
 }
 
-const updateAll = ()=>{
+const updateAll = () => {
 	getIncidencias();
 	getEquipos();
 	cargarNumeroDeSemanas();
@@ -303,61 +303,55 @@ onMounted(() => {
 </script>
 
 <template>
-	<div
-		class="flex md:flex-row md:justify-between md:items-start md:overflow-clip flex-col justify-start items-center w-full h-full overflow-y-scroll">
+	<div class="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr] w-full overflow-y-scroll hide-scrollbar">
 		<!-- Lado Izquierdo -->
-		<div class="w-full md:basis-1/4 grow h-full p-4">
-			<div class="flex flex-wrap justify-start items-center w-full gap-2 mb-4">
+		<div class="flex flex-col p-4 md:overflow-y-scroll hide-scrollbar gap-4">
+			<div class="flex flex-wrap justify-start items-center gap-2">
 				<CrearEquipos :id="id" />
 				<Historial :id="id" />
 			</div>
-
 			<!-- Selector de semana -->
-			<div class="mb-4">
+			<div class="flex flex-col">
 				<label for="semana" class="block text-sm font-medium ">Semana actual</label>
 				<select v-model="semanaSeleccionada" id="semana"
 					class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-zinc-50 outline-none">
-					<option  value=0 disabled selected class="text-gray-400">Selecciona una semana</option>
-					<option v-for="n in nroSemanas" :key="n" :value="n" :disabled="semanasCompletas.includes(n)">Semana {{ n }}<span v-if="semanasCompletas.includes(n)"> (completa)</span></option>
-					
+					<option value=0 disabled selected>Selecciona una semana</option>
+					<option v-for="n in nroSemanas" :key="n" :value="n" :disabled="semanasCompletas.includes(n)">Semana
+						{{ n }}<span v-if="semanasCompletas.includes(n)"> (completa)</span></option>
 				</select>
 			</div>
 
 			<!-- Lista de equipos (con distintivo si ya tiraron) -->
-			 
-			<Equipos v-if="semanaSeleccionada > 0" :id="id" :equipos="equiposConEstado" @equipo_seleccionado="actualizar_equipo"  />
+			<Equipos v-if="semanaSeleccionada > 0" :id="id" :equipos="equiposConEstado"
+				@equipo_seleccionado="actualizar_equipo" />
 		</div>
 
 		<!-- Lado Central -->
-		<div class="w-full md:basis-2/4 grow h-full">
-			<Ruleta3 :canSpin="can_spin" :items="contenido_ruleta" @result="actualizarRuleta" />
-		</div>
+		<Ruleta3 :canSpin="can_spin" :items="contenido_ruleta" @result="actualizarRuleta" />
 
 		<!-- Lado Derecho -->
-		<div class="w-full md:basis-1/4 grow h-full p-4">
-			<div class="flex flex-wrap justify-center md:justify-end items-center w-full gap-2 mb-4">
+		<div class="flex flex-col p-4 md:overflow-y-scroll hide-scrollbar gap-4">
+			<div class="flex flex-wrap justify-start md:justify-end items-center w-full gap-2">
 				<button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
-					disabled:bg-zinc-600 disabled:cursor-not-allowed" type="button" @click="cargarAlumnosequipo"
-					:disabled="!hay_subcategoria">
-					Girar Alumnos
+				disabled:bg-zinc-600 disabled:cursor-not-allowed" type="button" @click="() => {
+					if (!equipo_seleccionado) {
+						can_spin = false;
+						return;
+					}
+					getIncidencias();
+				}" :disabled="!equipo_seleccionado">
+					Girar Incidencias
 				</button>
 				<button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
-					disabled:bg-zinc-600 disabled:cursor-not-allowed" type="button" @click="cargarEquipos">
+							disabled:bg-zinc-600 disabled:cursor-not-allowed" type="button" @click="cargarEquipos">
 					Girar Equipos
 				</button>
 				<button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
-					disabled:bg-zinc-600 disabled:cursor-not-allowed" type="button" @click="() => {
-						if (!equipo_seleccionado) {
-							can_spin = false;
-							return;
-						}
-						getIncidencias();
-					}" :disabled="!equipo_seleccionado">
-					Girar Incidencias
+							disabled:bg-zinc-600 disabled:cursor-not-allowed" type="button" @click="cargarAlumnosequipo"
+					:disabled="!hay_subcategoria">
+					Girar Alumnos
 				</button>
-
 			</div>
-
 			<!-- Resumen de la Ejecución -->
 			<section class="flex flex-col w-full p-4 gap-2 bg-zinc-900 rounded-md border border-zinc-700 shadow-md">
 				<h2 class="text-lg font-bold text-white">Resumen de la Ejecución:</h2>
@@ -371,12 +365,12 @@ onMounted(() => {
 					<p><strong class="font-semibold">Alumno:</strong> {{ alumno_seleccionado?.nombre || '--' }}</p>
 					<p><strong class="font-semibold">Otro Equipo:</strong>
 						{{otro_equipo_seleccionado ? equipos.find(e => e.id === otro_equipo_seleccionado)?.nombre :
-						'--' }}
+							'--'}}
 					</p>
 					<p><strong class="font-semibold">Alumno otro equipo:</strong> {{ alumno_otro_equipo?.nombre || '--'
-						}}</p>
+					}}</p>
 				</div>
-
+				|
 				<!-- Textarea de Comentario -->
 				<div class="mt-4">
 					<label for="comentario" class="block text-sm font-medium text-white mb-1">Comentario:</label>
@@ -394,3 +388,57 @@ onMounted(() => {
 		</div>
 	</div>
 </template>
+
+<style scoped>
+/* Habilitar estilos personalizables para el select (Chrome) */
+select {
+
+	&,
+	&::picker(select) {
+		appearance: base-select;
+	}
+}
+
+/* Estilos del select */
+::picker(select) {
+	background-color: #18181b;
+	color: #ffffff;
+	border-radius: 6px;
+	border: 1px solid #3f3f46;
+	top: calc(anchor(bottom) + 2px);
+}
+
+/* Icono del select */
+select::picker-icon {
+	width: 24px;
+	height: 24px;
+	content: url("../../assets/chevron-down.svg");
+	transition: 0.3s rotate;
+}
+
+select:open::picker-icon {
+	rotate: 180deg;
+}
+
+/* Estilos de las opciones del select */
+select option {
+	background-color: #18181b;
+	color: #ffffff;
+	padding: 4px 8px;
+}
+
+select option:checked,
+select option:hover {
+	background-color: #fafafa;
+	color: #18181b;
+}
+
+select option:disabled {
+	background-color: #18181b;
+	color: #3f3f46;
+}
+
+option::checkmark {
+	display: none;
+}
+</style>
