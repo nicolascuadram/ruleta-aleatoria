@@ -343,8 +343,8 @@ watch(() => props.items, () => {
 /* Responsive */
 @media (max-width: 768px) {
     .roulette-wheel {
-        width: 250px;
-        height: 250px;
+        width: 300px;
+        height: 300px;
     }
 
     .spin-button {
