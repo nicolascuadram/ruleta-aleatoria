@@ -104,6 +104,7 @@ const getIncidencias = async () => {
 			throw new Error(`Error en la respuesta del servidor: ${response.statusText}`);
 		}
 		const data = await response.json();
+		//console.log(data);
 		incidencias.value = data;
 		categorias.value = [...new Set(data.map(i => i.categoria))];
 		subcategorias.value = data.map(i => i.subcategoria);
@@ -370,7 +371,7 @@ onMounted(() => {
 					<p><strong class="font-semibold">Alumno otro equipo:</strong> {{ alumno_otro_equipo?.nombre || '--'
 					}}</p>
 				</div>
-				|
+				
 				<!-- Textarea de Comentario -->
 				<div class="mt-4">
 					<label for="comentario" class="block text-sm font-medium text-white mb-1">Comentario:</label>
