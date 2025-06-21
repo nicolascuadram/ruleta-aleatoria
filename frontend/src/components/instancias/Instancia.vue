@@ -331,49 +331,73 @@ onMounted(() => {
 
 		<!-- Lado Derecho -->
 		<div class="flex flex-col p-4 md:overflow-y-scroll hide-scrollbar gap-4">
-			<div class="flex flex-wrap justify-start md:justify-end items-center w-full gap-2">
-				<button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
-				disabled:bg-zinc-600 disabled:cursor-not-allowed" type="button" @click="() => {
-					if (!equipo_seleccionado) {
-						can_spin = false;
-						return;
-					}
-					getIncidencias();
-				}" :disabled="!equipo_seleccionado">
-					Girar Incidencias
-				</button>
-				<button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
-							disabled:bg-zinc-600 disabled:cursor-not-allowed" type="button" @click="cargarEquipos">
-					Girar Equipos
-				</button>
-				<button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
-							disabled:bg-zinc-600 disabled:cursor-not-allowed" type="button" @click="cargarAlumnosequipo"
-					:disabled="!hay_subcategoria">
-					Girar Alumnos
-				</button>
+			<div class="flex justify-start items-center w-full">
+				<div class="flex flex-nowrap justify-start items-center gap-2 overflow-x-scroll hide-scrollbar">
+					<button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
+					disabled:bg-zinc-600 disabled:cursor-not-allowed" type="button" @click="() => {
+						if (!equipo_seleccionado) {
+							can_spin = false;
+							return;
+						}
+						getIncidencias();
+					}" :disabled="!equipo_seleccionado">
+						Girar Incidencias
+					</button>
+					<button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
+						disabled:bg-zinc-600 disabled:cursor-not-allowed"
+						type="button" @click="cargarEquipos" :disabled="!alumno_seleccionado"
+					>
+						Girar Equipos
+					</button>
+					<button class="bg-zinc-50 text-zinc-900 font-medium py-2 px-4 rounded-md hover:bg-zinc-300 transition duration-300 cursor-pointer shadow-md text-nowrap
+						disabled:bg-zinc-600 disabled:cursor-not-allowed"
+						type="button" @click="cargarAlumnosequipo" :disabled="!hay_subcategoria"
+					>
+						Girar Alumnos
+					</button>
+				</div>
 			</div>
 			<!-- Resumen de la Ejecución -->
 			<section class="flex flex-col w-full p-4 gap-2 bg-zinc-900 rounded-md border border-zinc-700 shadow-md">
 				<h2 class="text-lg font-bold text-white">Resumen de la Ejecución:</h2>
 				<!-- En la sección de Resumen de Ejecución -->
 				<div class="flex flex-col w-full gap-1 text-white">
-					<p><strong class="font-semibold">Equipo:</strong>
-						{{equipo_seleccionado ? equipos.find(e => e.id === equipo_seleccionado)?.nombre : '--'}}
+					<p v-if="!semanaSeleccionada" class="text-center text-zinc-200">
+						Selecciona una semana, un equipo, y gira la ruleta para ver resultados!
 					</p>
-					<p><strong class="font-semibold">Categoría:</strong> {{ categoria_seleccionada || '--' }}</p>
-					<p><strong class="font-semibold">Subcategoría:</strong> {{ subcategoria_seleccionada || '--' }}</p>
-					<p><strong class="font-semibold">Alumno:</strong> {{ alumno_seleccionado?.nombre || '--' }}</p>
-					<p><strong class="font-semibold">Otro Equipo:</strong>
-						{{otro_equipo_seleccionado ? equipos.find(e => e.id === otro_equipo_seleccionado)?.nombre :
-							'--'}}
+					<p v-if="semanaSeleccionada">
+						<strong class="font-semibold">Semana: </strong>
+						{{ semanaSeleccionada }}
 					</p>
-					<p><strong class="font-semibold">Alumno otro equipo:</strong> {{ alumno_otro_equipo?.nombre || '--'
-					}}</p>
+					<p v-if="equipo_seleccionado">
+						<strong class="font-semibold">Equipo: </strong>
+						{{ equipos.find(e => e.id === equipo_seleccionado)?.nombre }}
+					</p>
+					<p v-if="categoria_seleccionada">
+						<strong class="font-semibold">Categoría: </strong>
+						{{ categoria_seleccionada }}
+					</p>
+					<p v-if="subcategoria_seleccionada">
+						<strong class="font-semibold">Subcategoría: </strong>
+						{{ subcategoria_seleccionada }}
+					</p>
+					<p v-if="alumno_seleccionado">
+						<strong class="font-semibold">Alumno: </strong>
+						{{ alumno_seleccionado.nombre }}
+					</p>
+					<p v-if="otro_equipo_seleccionado">
+						<strong class="font-semibold">Otro Equipo: </strong>
+						{{ equipos.find(e => e.id === otro_equipo_seleccionado)?.nombre }}
+					</p>
+					<p v-if="alumno_otro_equipo">
+						<strong class="font-semibold">Alumno otro equipo: </strong>
+						{{ alumno_otro_equipo.nombre }}
+					</p>
 				</div>
-				|
+				
 				<!-- Textarea de Comentario -->
-				<div class="mt-4">
-					<label for="comentario" class="block text-sm font-medium text-white mb-1">Comentario:</label>
+				<div v-if="subcategoria_seleccionada" class="mt-4">
+					<label for="comentario" class="block text-base font-medium text-white mb-1">Comentario:</label>
 					<textarea id="comentario" v-model="comentario" placeholder="Escribe tu comentario aquí..." rows="2"
 						class="w-full p-2 rounded-md border border-zinc-600 bg-zinc-800 text-white resize-none shadow-inner"></textarea>
 				</div>
