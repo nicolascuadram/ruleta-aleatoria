@@ -67,6 +67,7 @@ onMounted(() => {
                 titulo="Gestión de Proyectos Tecnológicos" 
                 :semestre="instancia.semestre"
                 :profesor="instancia.profesor"
+                :nro_semanas="instancia.nro_semanas"
             />
         </div>
         <!-- Modal para crear instancia -->

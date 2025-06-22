@@ -16,7 +16,7 @@ const props = defineProps({
 })
 
 // Emits
-const emit = defineEmits(['result'])
+const emit = defineEmits(['result', 'isSpinning'])
 
 // Reactive data
 const rotation = ref(0)
@@ -146,6 +146,7 @@ const spin = () => {
     if (isSpinning.value) return
 
     isSpinning.value = true
+    emit('isSpinning', isSpinning.value);
     result.value = null
 
     // Generar rotación aleatoria (múltiples vueltas + ángulo final)
@@ -165,6 +166,7 @@ const spin = () => {
 
         result.value = actualContent.value[resultIndex].name
         isSpinning.value = false
+        emit('isSpinning', isSpinning.value);
 
         // Emitir el resultado al componente padre
         emit('result', result.value)
@@ -259,8 +261,10 @@ watch(() => props.items, () => {
 }
 
 .roulette-wheel {
-    width: 400px;
-    height: 400px;
+    width: 65vmin;
+    height: 65vmin;
+    min-width: 300px;
+    min-height: 300px;
     border-radius: 50%;
     position: relative;
     border: 4px solid #fafafa;
@@ -338,17 +342,5 @@ watch(() => props.items, () => {
     font-weight: bold;
     margin: 0;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .roulette-wheel {
-        width: 250px;
-        height: 250px;
-    }
-
-    .spin-button {
-        padding: 10px 20px;
-    }
 }
 </style>
