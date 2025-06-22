@@ -119,8 +119,13 @@ export default{
       const workbook = new ExcelJS.Workbook();
       const buffer = await file.arrayBuffer();
       await workbook.xlsx.load(buffer);
-
-      const worksheet = workbook.worksheets[0];
+      //LA CONST WORKSHEET, BUSCA LA HOJA DE CALCULO CON EL NOMBRE 'integrantes'
+      // EN ESTE CASO, SE ASUME QUE EL ARCHIVO DEBE TENER UNA HOJA CON ESE NOMBRE
+      // SI NO EXISTIERA, ENTONCES DEBERÍA LEER EL WORKSHEET 0 (PRIMERA HOJA)
+      let worksheet = workbook.getWorksheet('integrantes');
+      if (!worksheet) {
+        worksheet = workbook.worksheets[0];
+      }
       const headerRow = worksheet.getRow(1);
       const headers = headerRow.values.slice(1);
 

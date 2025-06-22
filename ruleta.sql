@@ -35,6 +35,13 @@ fecha timestamp,
 comentario text
 );
 
+ALTER TABLE instancia ADD COLUMN nro_semanas INTEGER CHECK (nro_semanas > 0);
+ALTER TABLE registro ADD COLUMN semana INTEGER;
+
+
+-- DATOS DE PRUEBA --
+UPDATE instancia set nro_semanas = 18;
+
 INSERT INTO instancia (semestre, profesor) VALUES
 ('2024-1', 'Luis Silvestre'),
 ('2024-2', 'Luis Silvestre');
@@ -90,6 +97,3 @@ INSERT INTO registro (ref_incidencia, ref_grupo, alumno_escogido, grupo_intercam
 (18, 3, 'Tomás', 4, 'Sergio', CURRENT_TIMESTAMP, 'Equipo Gamma cambiará a Tomás por Sergio del Equipo Delta');
 
 
-ALTER TABLE instancia ADD COLUMN nro_semanas INTEGER CHECK (nro_semanas > 0);
-UPDATE instancia set nro_semanas = 18;
-ALTER TABLE registro ADD COLUMN semana INTEGER;
