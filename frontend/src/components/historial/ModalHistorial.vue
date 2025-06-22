@@ -18,7 +18,9 @@ const modalContentRef = ref(null);
 
 const closeModal = () => emit('close-modal');
 
-const handleEscape = (e) => { if (e.key === 'Escape') closeModal(); };
+const handleEscape = (e) => {
+    if (e.key === 'Escape') closeModal();
+};
 
 const handleClickOutside = (e) => {
     if (modalContentRef.value && !modalContentRef.value.contains(e.target)) {
@@ -69,7 +71,6 @@ const getNumeroSemanas = async () => {
 };
 
 const registrosFiltrados = computed(() => {
-    console.log(semanaSeleccionada.value)
     if (!semanaSeleccionada.value) return registros.value;
     return registros.value.filter(r => r.semana === parseInt(semanaSeleccionada.value));
 });
@@ -84,13 +85,11 @@ onMounted(() => {
     getHistorial();
     getNumeroSemanas();
 });
-
 </script>
 
 <template>
     <section role="dialog" aria-modal="true" v-if="isModalOpen"
         class="fixed inset-0 flex items-start justify-center bg-[#000000dd] z-50 py-8 overflow-y-scroll hide-scrollbar">
-
         <div ref="modalContentRef"
             class="flex flex-col w-2/3 justify-start items-center rounded-md px-6 py-4 bg-zinc-950 border border-zinc-700">
             <!-- Lista de registros -->
@@ -99,13 +98,24 @@ onMounted(() => {
                 <option value="">Todas las semanas</option>
                 <option v-for="n in nroSemanas" :key="n" :value="n">Semana {{ n }}</option>
             </select>
+
             <div class="flex flex-col items-center justify-start w-full h-full p-4 gap-4">
                 <h1 class="text-2xl font-semibold">Historial</h1>
                 <div class="flex flex-wrap gap-4 w-full h-full">
-                    <CardRegistro v-for="registro in registrosFiltrados" :key="registro.id"
-                        :categoria="registro.tipo_incidencia" :incidencia="registro.incidencia" :grupo="registro.grupo"
-                        :alumno="registro.alumno" :fecha="formattedDate(registro.fecha)"
-                        :comentario="registro.comentario" />
+                    <CardRegistro
+                        v-for="registro in registrosFiltrados"
+                        :key="registro.id"
+                        :semana="registro.semana"
+                        :grupo="registro.grupo"
+                        :categoria="registro.tipo_incidencia"
+                        :subcategoria="registro.subcategoria"
+                        :alumno="registro.alumno"
+                        :otro_equipo="registro.otro_equipo"
+                        :alumno_otro_equipo="registro.alumno_otro_equipo"
+                        :incidencia="registro.incidencia"
+                        :comentario="registro.comentario"
+                        :fecha="formattedDate(registro.fecha)"
+                    />
                 </div>
             </div>
         </div>
@@ -113,7 +123,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Habilitar estilos personalizables para el select (Chrome) */
 select {
     &,
     &::picker(select) {
@@ -121,7 +130,6 @@ select {
     }
 }
 
-/* Estilos del select */
 ::picker(select) {
     background-color: #18181b;
     color: #ffffff;
@@ -130,7 +138,6 @@ select {
     top: calc(anchor(bottom) + 2px);
 }
 
-/* Icono del select */
 select::picker-icon {
     width: 24px;
     height: 24px;
@@ -142,7 +149,6 @@ select:open::picker-icon {
     rotate: 180deg;
 }
 
-/* Estilos de las opciones del select */
 select option {
     background-color: #18181b;
     color: #ffffff;
