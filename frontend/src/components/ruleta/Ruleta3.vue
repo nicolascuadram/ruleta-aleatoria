@@ -205,7 +205,7 @@ watch(() => props.items, () => {
             <svg class="roulette-wheel" :style="{ transform: `rotate(${rotation}deg)` }" ref="wheel" width="300"
                 height="300" viewBox="0 0 300 300">
                 <g v-for="(item, index) in actualContent" :key="index">
-                    <path :d="getSegmentPath(index)" :fill="colors[index % colors.length]" stroke="#fff"
+                    <path :d="getSegmentPath(index)" :fill="colors[index % colors.length]" stroke="#09090b"
                         stroke-width="2" />
 
                     <!-- Texto con wrapping -->
@@ -267,7 +267,6 @@ watch(() => props.items, () => {
     min-height: 300px;
     border-radius: 50%;
     position: relative;
-    border: 4px solid #fafafa;
     transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
     overflow: hidden;
 }
@@ -283,6 +282,7 @@ watch(() => props.items, () => {
     border-right: 15px solid transparent;
     border-top: 25px solid #fafafa;
     z-index: 10;
+    border-radius: 2px;
 }
 
 .controls {
