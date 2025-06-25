@@ -314,7 +314,6 @@ onMounted(() => {
 		<div class="flex flex-col p-4 md:overflow-y-scroll hide-scrollbar gap-4">
 			<div class="flex flex-wrap justify-start items-center gap-2">
 				<CrearEquipos :id="id" />
-				<Historial :id="id" />
 			</div>
 			<!-- Selector de semana -->
 			<div class="flex flex-col">

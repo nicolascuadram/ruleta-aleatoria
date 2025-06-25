@@ -84,6 +84,7 @@ onMounted(() => {
                         :otroalumno="Number(registro.alumno_intercambio)"
                         :fecha="formattedDate(registro.fecha)"
                         :comentario="registro.comentario" 
+                        :semana="registro.semana"
                     />
                 </div>
                 

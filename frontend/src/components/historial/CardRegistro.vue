@@ -36,8 +36,12 @@ defineProps({
 	comentario: {
 		type: String,
 		required: false,
-        default: 'No hay comentarios',
+    default: 'No hay comentarios',
 	},
+  semana:{
+    type: Number,
+		required: false,
+  }
 });
 </script>
 
@@ -46,6 +50,7 @@ defineProps({
     <!-- Header -->
     <div class="flex justify-between items-start w-full gap-2">
       <h1 class="text-xl font-semibold text-white truncate flex-1 min-w-0">{{ grupo }}</h1>
+      <h1 class="text-xl font-semibold text-white truncate flex-1 min-w-0">Semana {{ semana }}</h1>
       <span class="text-sm font-medium text-zinc-400 whitespace-nowrap pl-2">{{ fecha }}</span>
     </div>
 
@@ -86,14 +91,14 @@ defineProps({
       </template>
 
       <!-- Comentario (con tratamiento especial para multi-línea) -->
-      <template v-if="comentario">
-		<div v-if="comentario" class="bg-zinc-800/50 rounded-md p-3 mt-2">
-  <p class="text-lg break-words">
-    <strong class="text-zinc-300">Comentario: </strong>
-    <span class="text-white">{{ comentario }}</span>
-  </p>
-</div>
-      </template>
+<template v-if="comentario">
+  <div class="bg-zinc-800/50 rounded-md p-3 mt-2 max-h-32 overflow-y-auto">
+    <p class="text-lg break-words">
+      <strong class="text-zinc-300">Comentario: </strong>
+      <span class="text-white whitespace-pre-wrap">{{ comentario }}</span>
+    </p>
+  </div>
+</template>
     </div>
   </a>
 </template>
