@@ -20,7 +20,6 @@ ref_grupo integer references grupo(id) on update cascade on delete cascade
 
 create table if not exists incidencia(
 id serial primary key,
-ref_instancia integer references instancia(id) on update cascade on delete cascade,
 categoria text not null,
 subcategoria text not null
 );
@@ -35,6 +34,13 @@ alumno_intercambio text,
 fecha timestamp,
 comentario text
 );
+
+ALTER TABLE instancia ADD COLUMN nro_semanas INTEGER CHECK (nro_semanas > 0);
+ALTER TABLE registro ADD COLUMN semana INTEGER;
+
+
+-- DATOS DE PRUEBA --
+UPDATE instancia set nro_semanas = 18;
 
 INSERT INTO instancia (semestre, profesor) VALUES
 ('2024-1', 'Luis Silvestre'),
@@ -56,32 +62,32 @@ INSERT INTO alumno (nombre, ref_grupo) VALUES
 ('Juan Pérez', 4),
 ('Sergio Martínez', 4);
 
-INSERT INTO incidencia (ref_instancia, categoria, subcategoria) VALUES
-(1, 'Organizacional', 'Cambia de JP/SM'),
-(1, 'Organizacional', 'Cambia de proyecto principal'),
-(1, 'Organizacional', 'Cambia de tablero kanban'),
-(1, 'Organizacional', 'Cambia de horario de trabajo'),
-(1, 'Organizacional', 'Cambia de planificación'),
-(1, 'Operativo', 'Error en el sistema'),
-(1, 'Operativo', 'Error en la planificación'),
-(1, 'Operativo', 'Error de hardware'),
-(1, 'Operativo', 'Error de comunicación'),
-(1, 'Operativo', 'Error de equipo'),
-(1, 'Tecnológico', 'Actualizar librerías/api a última versión'),
-(1, 'Tecnológico', 'Cambiar el IDE de desarrollo'),
-(1, 'Tecnológico', 'Explora implementación alternativa'),
-(1, 'Tecnológico', 'Cambia de librería/api de desarrollo'),
-(1, 'Tecnológico', 'Cambia de entorno de desarrollo'),
-(1, 'Proyecto', 'Desarrollador con licencia'),
-(1, 'Proyecto', 'Cambiar el horario de reunión'),
-(1, 'Proyecto', 'Intercambia un desarrollador(a) a otro proyecto'),
-(1, 'Proyecto', 'Priorizar un solo proyecto'),
-(1, 'Proyecto', 'Grupo en congeladora'),
-(1, 'Personal', 'Desarrollador con actividad personal'),
-(1, 'Personal', 'Desarrollador genera conflicto grupal'),
-(1, 'Personal', 'Desarrollador prioriza tareas administrativas de proyecto'),
-(1, 'Personal', 'Desarrollador genera malestar invididual'),
-(1, 'Personal', 'Solicita cambio de SM/JP');
+INSERT INTO incidencia (categoria, subcategoria) VALUES
+('Organizacional', 'Cambia de JP/SM'),
+('Organizacional', 'Cambia de proyecto principal'),
+('Organizacional', 'Cambia de tablero kanban'),
+('Organizacional', 'Cambia de horario de trabajo'),
+('Organizacional', 'Cambia de planificación'),
+('Operativo', 'Error en el sistema'),
+('Operativo', 'Error en la planificación'),
+('Operativo', 'Error de hardware'),
+('Operativo', 'Error de comunicación'),
+('Operativo', 'Error de equipo'),
+('Tecnológico', 'Actualizar librerías/api a última versión'),
+('Tecnológico', 'Cambiar el IDE de desarrollo'),
+('Tecnológico', 'Explora implementación alternativa'),
+('Tecnológico', 'Cambia de librería/api de desarrollo'),
+('Tecnológico', 'Cambia de entorno de desarrollo'),
+('Proyecto', 'Desarrollador con licencia'),
+('Proyecto', 'Cambiar el horario de reunión'),
+('Proyecto', 'Intercambia un desarrollador(a) a otro proyecto'),
+('Proyecto', 'Priorizar un solo proyecto'),
+('Proyecto', 'Grupo en congeladora'),
+('Personal', 'Desarrollador con actividad personal'),
+('Personal', 'Desarrollador genera conflicto grupal'),
+('Personal', 'Desarrollador prioriza tareas administrativas de proyecto'),
+('Personal', 'Desarrollador genera malestar invididual'),
+('Personal', 'Solicita cambio de SM/JP');
 
 INSERT INTO registro (ref_incidencia, ref_grupo, alumno_escogido, grupo_intercambio, alumno_intercambio, fecha, comentario) VALUES
 (20, 1, NULL, NULL, NULL, CURRENT_TIMESTAMP - interval '2 days', 'Se pausó al Equipo Alfa por baja participación'),
@@ -89,3 +95,5 @@ INSERT INTO registro (ref_incidencia, ref_grupo, alumno_escogido, grupo_intercam
 (8, 2, NULL, NULL, NULL, CURRENT_TIMESTAMP - interval '3 days', 'Equipo Beta sin acceso a computadores'),
 (25, 2, 'María Ríos', NULL, NULL, CURRENT_TIMESTAMP, 'María cambia su rol a Scrum Master'),
 (18, 3, 'Tomás', 4, 'Sergio', CURRENT_TIMESTAMP, 'Equipo Gamma cambiará a Tomás por Sergio del Equipo Delta');
+
+

@@ -1,8 +1,13 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import QuitarItem from './QuitarItem.vue'
 
 // Props
 const props = defineProps({
+    canSpin: {
+        type: Boolean,
+        required: true,
+    },
     items: {
         type: Array,
         required: true,
@@ -11,13 +16,15 @@ const props = defineProps({
 })
 
 // Emits
-const emit = defineEmits(['result'])
+const emit = defineEmits(['result', 'isSpinning'])
 
 // Reactive data
 const rotation = ref(0)
 const isSpinning = ref(false)
 const result = ref(null)
 const wheel = ref(null)
+const actualContent = ref([]);
+const allContent = ref([]);
 
 const colors = [
     '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4',
@@ -27,7 +34,7 @@ const colors = [
 
 // Computed
 const segmentAngle = computed(() => {
-    return 360 / props.items.length
+    return 360 / actualContent.value.length
 })
 
 // Methods
@@ -139,6 +146,7 @@ const spin = () => {
     if (isSpinning.value) return
 
     isSpinning.value = true
+    emit('isSpinning', isSpinning.value);
     result.value = null
 
     // Generar rotación aleatoria (múltiples vueltas + ángulo final)
@@ -154,15 +162,37 @@ const spin = () => {
     setTimeout(() => {
         const normalizedAngle = (360 - (totalRotation % 360)) % 360
         const segmentIndex = Math.floor(normalizedAngle / segmentAngle.value)
-        const resultIndex = segmentIndex >= props.items.length ? 0 : segmentIndex
+        const resultIndex = segmentIndex >= actualContent.value.length ? 0 : segmentIndex
 
-        result.value = props.items[resultIndex]
+        result.value = actualContent.value[resultIndex].name
         isSpinning.value = false
+        emit('isSpinning', isSpinning.value);
 
         // Emitir el resultado al componente padre
         emit('result', result.value)
     }, 5000)
 }
+
+const showModalRemove = ref(false);
+
+const updateContent = (new_content) => {
+    actualContent.value = new_content;
+};
+
+const toggleModalRemove = () => {
+    showModalRemove.value = !showModalRemove.value;
+};
+
+watch(() => props.items, () => {
+    actualContent.value = props.items.map(item => ({
+        name: item,
+        active: true
+    }));
+    allContent.value = props.items.map(item => ({
+        name: item,
+        active: true
+    }));
+});
 </script>
 
 <template>
@@ -174,15 +204,15 @@ const spin = () => {
             <!-- Ruleta -->
             <svg class="roulette-wheel" :style="{ transform: `rotate(${rotation}deg)` }" ref="wheel" width="300"
                 height="300" viewBox="0 0 300 300">
-                <g v-for="(item, index) in items" :key="index">
-                    <path :d="getSegmentPath(index)" :fill="colors[index % colors.length]" stroke="#fff"
+                <g v-for="(item, index) in actualContent" :key="index">
+                    <path :d="getSegmentPath(index)" :fill="colors[index % colors.length]" stroke="#09090b"
                         stroke-width="2" />
 
                     <!-- Texto con wrapping -->
                     <g :transform="getTextTransform(index)">
-                        <text v-for="(line, lineIndex) in wrapText(item)" :key="lineIndex" :x="getTextPosition(index).x"
-                            :y="getTextPosition(index).y + (lineIndex - (wrapText(item).length - 1) / 2) * (getFontSize(item, segmentAngle) * 1.2)"
-                            fill="white" font-family="Arial, sans-serif" :font-size="getFontSize(item, segmentAngle)"
+                        <text v-for="(line, lineIndex) in wrapText(item.name)" :key="lineIndex" :x="getTextPosition(index).x"
+                            :y="getTextPosition(index).y + (lineIndex - (wrapText(item.name).length - 1) / 2) * (getFontSize(item.name, segmentAngle) * 1.2)"
+                            fill="white" font-family="Arial, sans-serif" :font-size="getFontSize(item.name, segmentAngle)"
                             font-weight="bold" text-anchor="middle" dominant-baseline="middle"
                             style="text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">
                             {{ line }}
@@ -194,11 +224,17 @@ const spin = () => {
 
         <!-- Controles -->
         <div class="controls">
-            <button @click="spin" :disabled="isSpinning" class="spin-button">
+            <button @click="spin" :disabled="isSpinning || !canSpin" class="spin-button">
                 {{ isSpinning ? 'Girando...' : 'Girar Ruleta' }}
+            </button>
+            <button @click="toggleModalRemove" :disabled="isSpinning" class="spin-button remove-button">
+                Quitar Items
             </button>
         </div>
 
+        <!-- Modal -->
+        <QuitarItem :items="allContent" :isModalOpen="showModalRemove" @close-modal="toggleModalRemove" @update:content="updateContent"/>
+        
         <!-- Resultado -->
         <!-- <div v-if="result" class="result">
             <h3>¡Resultado!</h3>
@@ -225,11 +261,12 @@ const spin = () => {
 }
 
 .roulette-wheel {
-    width: 400px;
-    height: 400px;
+    width: 65vmin;
+    height: 65vmin;
+    min-width: 300px;
+    min-height: 300px;
     border-radius: 50%;
     position: relative;
-    border: 4px solid #fafafa;
     transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
     overflow: hidden;
 }
@@ -245,10 +282,16 @@ const spin = () => {
     border-right: 15px solid transparent;
     border-top: 25px solid #fafafa;
     z-index: 10;
+    border-radius: 2px;
 }
 
 .controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
     margin: 20px 0;
+    width: 100%;
 }
 
 .spin-button {
@@ -265,14 +308,17 @@ const spin = () => {
 }
 
 .spin-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background-color: #d4d4d8;
 }
 
 .spin-button:disabled {
     opacity: 0.7;
     cursor: not-allowed;
     transform: none;
+}
+
+.remove-button:disabled {
+    display: none;
 }
 
 .result {
@@ -296,17 +342,5 @@ const spin = () => {
     font-weight: bold;
     margin: 0;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .roulette-wheel {
-        width: 250px;
-        height: 250px;
-    }
-
-    .spin-button {
-        padding: 10px 20px;
-    }
 }
 </style>

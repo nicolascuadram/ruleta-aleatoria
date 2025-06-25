@@ -2,6 +2,7 @@
 import { ref, computed, onUnmounted, watch } from 'vue';
 const API_URL = import.meta.env.PUBLIC_API_URL;
 
+
 /* LÓGICA DEL MODAL */
 
 // Recibe la propiedad isModalOpen
@@ -50,6 +51,7 @@ onUnmounted(() => {
 /* LÓGICA DEL COMPONENTE ESPECÍFICO */
 
 const semestre = ref('');
+const nroSemanas = ref('');
 
 // Generar opciones de semestre para el año actual y el siguiente
 const currentYear = new Date().getFullYear();
@@ -73,6 +75,7 @@ const postInstancia = async () => {
             body: JSON.stringify({
                 semestre: semestre.value,
                 profesor: "Luis Silvestre", // Cambiar por el nombre del profesor logeado
+                nro_semanas: parseInt(nroSemanas.value)
             }),
         });
         if (!response.ok) {
@@ -97,8 +100,10 @@ const updateInstancias = (instancia) => {
 </script>
 
 <template>
-    <section role="dialog" aria-modal="true" v-if="isModalOpen" class="fixed inset-0 flex items-center justify-center bg-[#000000dd] z-50">
-        <div ref="modalContentRef" class="flex flex-col justify-center items-center rounded-md px-6 py-4 bg-zinc-950 border border-zinc-700">
+    <section role="dialog" aria-modal="true" v-if="isModalOpen"
+        class="fixed inset-0 flex items-center justify-center bg-[#000000dd] z-50">
+        <div ref="modalContentRef"
+            class="flex flex-col justify-center items-center rounded-md px-6 py-4 bg-zinc-950 border border-zinc-700">
             <form @submit.prevent="postInstancia" class="flex flex-col justify-center items-center gap-4">
                 <header class="flex flex-col w-full text-start gap-1">
                     <h2 class="text-xl font-bold">Nueva Instancia</h2>
@@ -106,12 +111,19 @@ const updateInstancias = (instancia) => {
                 </header>
                 <div class="flex flex-col items-start w-full gap-1">
                     <label for="semestre" class="block text-sm font-bold">Semestre</label>
-                    <select v-model="semestre" required class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-white outline-none">
+                    <select v-model="semestre" required
+                        class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-white outline-none">
                         <option value="" disabled selected>Selecciona un semestre</option>
                         <option v-for="option in semestreOptions" :key="option" :value="option">
                             {{ option }}
                         </option>
                     </select>
+                </div>
+                <div class="flex flex-col items-start w-full gap-1">
+                    <label for="nroSemanas" class="block text-sm font-bold">Número de semanas</label>
+                    <input v-model="nroSemanas" type="number" min="1" required
+                        class="block w-full text-base border border-zinc-700 rounded-md px-2 py-1 bg-zinc-900 text-white outline-none"
+                        placeholder="Ingresa el número de semanas">
                 </div>
                 <div class="flex justify-end items-center w-full gap-4">
                     <button
@@ -133,7 +145,9 @@ const updateInstancias = (instancia) => {
 <style scoped>
 /* Habilitar estilos personalizables para el select (Chrome) */
 select {
-    &, &::picker(select) {
+
+    &,
+    &::picker(select) {
         appearance: base-select;
     }
 }
@@ -156,7 +170,7 @@ select::picker-icon {
 }
 
 select:open::picker-icon {
-  rotate: 180deg;
+    rotate: 180deg;
 }
 
 /* Estilos de las opciones del select */
@@ -166,7 +180,8 @@ select option {
     padding: 4px 8px;
 }
 
-select option:checked, select option:hover {
+select option:checked,
+select option:hover {
     background-color: #fafafa;
     color: #18181b;
 }

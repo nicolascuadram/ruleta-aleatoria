@@ -3,3 +3,4 @@ PGUSER=tu-usuario
 PGPASSWORD=tu-contraseña
 PGDATABASE=tu-basededatos
 PGPORT=5432
+PORT=3000

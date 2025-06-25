@@ -1,10 +1,21 @@
+---
+import SubirIncidencias from "../../components/incidencias/SubirIncidencias.vue";
+
+// Detectamos si estamos en la ruta raíz "/"
+const isHome = Astro.url.pathname === "/";
+---
+
 <nav class="w-full flex justify-between items-center p-4 bg-zinc-900 border-b border-zinc-800 shadow-md">
-    <!-- Lado izquierdo -->
-    <div class="flex items-center">
-        <a href="/" class="font-bold text-lg">Ruleta Aleatoria</a>
-    </div>
-    <!-- Lado derecho -->
-    <div class="flex justify-center items-center gap-4">
-        <a href="/" class="font-medium text-md">Instancias</a>
-    </div>
+  <!-- Lado izquierdo -->
+  <div class="flex items-center">
+    <a href="/" class="font-bold text-lg text-white">Ruleta Aleatoria</a>
+  </div>
+
+  <!-- Lado derecho -->
+  <div class="flex justify-center items-center gap-4">
+    {isHome && (
+      <SubirIncidencias client:load/>
+    )}
+  </div>
 </nav>
+

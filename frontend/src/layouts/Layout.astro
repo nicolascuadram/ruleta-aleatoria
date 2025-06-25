@@ -18,7 +18,7 @@ import "../styles/global.css";
 		<div class="flex flex-col h-full">
 			<Navbar />
 			<!-- Contenido principal -->
-			<main class="h-full flex flex-col overflow-hidden">
+			<main class="h-max flex flex-col md:overflow-hidden">
 				<slot />
 			</main>
 			<Footer />
@@ -27,17 +27,17 @@ import "../styles/global.css";
 </html>
 
 <style is:global>
-	body {
-		font-family: 'Inter Variable', sans-serif;
-		overflow-y: auto;
-	}
+  body {
+    font-family: 'Inter Variable', sans-serif;
+    overflow-y: auto;
+  }
 
-	.hide-scrollbar {
-		scrollbar-width: none; /* Firefox */
-		-ms-overflow-style: none; /* IE 10+ */
-	}
+  .hide-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
 
-	.hide-scrollbar::-webkit-scrollbar {
-		display: none; /* Chrome, Safari, Edge */
-	}
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
 </style>
