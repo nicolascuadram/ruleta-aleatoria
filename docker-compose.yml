@@ -3,7 +3,7 @@ services:
     build: ./frontend
     container_name: frontend
     ports:
-      - "10001:10001"
+      - "1001:1001"
     networks:
       - backend_net
     depends_on:
@@ -14,13 +14,13 @@ services:
     build: ./backend
     container_name: backend
     ports:
-      - "10002:10002"
+      - "1002:1002"
     networks:
       - backend_net
     depends_on:
       - postgres
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:10002" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:1002" ]
       interval: 10s
       timeout: 5s
       retries: 5

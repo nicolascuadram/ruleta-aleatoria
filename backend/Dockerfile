@@ -11,6 +11,6 @@ COPY . .
 
 ENV NODE_ENV=production
 
-EXPOSE 10002
+EXPOSE 1002
 
 CMD ["node", "server.js"]
