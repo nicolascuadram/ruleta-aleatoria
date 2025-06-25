@@ -248,9 +248,9 @@ async function subirBackend() {
 		const body = {
 			ref_incidencia: incidenciaSeleccionada.id,
 			ref_grupo: equipo_seleccionado.value,
-			alumno_escogido: alumno_seleccionado.value?.id,
+			alumno_escogido: alumno_seleccionado.value?.nombre,
 			grupo_intercambio: otro_equipo_seleccionado.value,
-			alumno_intercambio: alumno_otro_equipo.value?.id,
+			alumno_intercambio: alumno_otro_equipo.value?.nombre,
 			semana: semanaSeleccionada.value,
 			comentario: comentario.value
 		};

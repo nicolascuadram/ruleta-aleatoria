@@ -19,6 +19,16 @@ defineProps({
 		required: false,
         default: '',
 	},
+	otrogrupo: {
+        type: Number,
+		required: false,
+        default: '',
+	},
+	otroalumno: {
+        type: Number,
+		required: false,
+        default: '',
+	},
 	fecha: {
 		type: String,
 		required: true,
@@ -30,23 +40,60 @@ defineProps({
 	},
 });
 </script>
+
 <template>
-	<a class="flex flex-col justify-between items-center w-full px-4 py-3 gap-2 border border-zinc-700 rounded-md shadow-md transition duration-300 cursor-default bg-zinc-900">
-		<header class="flex justify-between items-center w-full">
-			<h1 class="text-xl font-semibold leading-snug">{{ grupo }}</h1>
-			<h2 class="text-sm font-medium text-zinc-300">{{ fecha }}</h2>
-		</header>
-		<div class="flex flex-col justify-start items-start w-full">
-			<p class="text-lg"><strong>Categoria: </strong>{{ categoria }}</p>
-			<span class="flex w-full justify-start items-start">
-				<p class="text-lg"><strong>Incidencia: </strong>{{ incidencia }}</p>
-            	<p v-if="alumnoescogido" class="text-lg"><strong>. Alumno: </strong>{{ alumnoescogido }}</p>
-			</span>
-            <p v-if="comentario" class="text-lg"><strong>Comentario: </strong>{{ comentario }}</p>
-			<!-- <span class="flex justify-center items-center gap-2 px-2 py-1 bg-zinc-50 text-zinc-900 font-medium rounded-md shadow-md">
-				<UserPen color="#18181b" :size="20"/>
-				<p class="text-xs font-medium">{{ comentario }}</p>
-			</span> -->
-		</div>
-	</a>
+  <a class="flex flex-col justify-between w-full px-4 py-3 gap-3 max-h-[350px] border border-zinc-700 rounded-md shadow-md bg-zinc-900 overflow-hidden">
+    <!-- Header -->
+    <div class="flex justify-between items-start w-full gap-2">
+      <h1 class="text-xl font-semibold text-white truncate flex-1 min-w-0">{{ grupo }}</h1>
+      <span class="text-sm font-medium text-zinc-400 whitespace-nowrap pl-2">{{ fecha }}</span>
+    </div>
+
+    <!-- Contenido - Versión optimizada sin espacios vacíos -->
+    <div class="flex flex-col w-full gap-2 overflow-y-auto">
+      <!-- Campo fijo: Categoría -->
+      <div class="flex gap-2 items-baseline">
+        <strong class="text-zinc-400 whitespace-nowrap">Categoría:</strong>
+        <span class="text-white truncate">{{ categoria }}</span>
+      </div>
+      
+      <!-- Campo fijo: Incidencia -->
+      <div class="flex gap-2 items-baseline">
+        <strong class="text-zinc-400 whitespace-nowrap">Incidencia:</strong>
+        <span class="text-white truncate">{{ incidencia }}</span>
+      </div>
+
+      <!-- Campos condicionales (solo aparecen si tienen contenido) -->
+      <template v-if="alumnoescogido">
+        <div class="flex gap-2 items-baseline">
+          <strong class="text-zinc-400 whitespace-nowrap">Alumno:</strong>
+          <span class="text-white truncate">{{ alumnoescogido }}</span>
+        </div>
+      </template>
+
+      <template v-if="otrogrupo">
+        <div class="flex gap-2 items-baseline">
+          <strong class="text-zinc-400 whitespace-nowrap">Otro Grupo:</strong>
+          <span class="text-white truncate">{{ otrogrupo }}</span>
+        </div>
+      </template>
+
+      <template v-if="otroalumno">
+        <div class="flex gap-2 items-baseline">
+          <strong class="text-zinc-400 whitespace-nowrap">Otro Alumno:</strong>
+          <span class="text-white truncate">{{ otroalumno }}</span>
+        </div>
+      </template>
+
+      <!-- Comentario (con tratamiento especial para multi-línea) -->
+      <template v-if="comentario">
+		<div v-if="comentario" class="bg-zinc-800/50 rounded-md p-3 mt-2">
+  <p class="text-lg break-words">
+    <strong class="text-zinc-300">Comentario: </strong>
+    <span class="text-white">{{ comentario }}</span>
+  </p>
+</div>
+      </template>
+    </div>
+  </a>
 </template>
