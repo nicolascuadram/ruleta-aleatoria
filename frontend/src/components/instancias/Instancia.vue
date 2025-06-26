@@ -2,10 +2,9 @@
 import { ref, onMounted, watch, computed } from 'vue';
 import Equipos from "../equipos/Equipos.vue";
 import CrearEquipos from "../equipos/CrearEquipos.vue";
-import Ruleta from "../ruleta/Ruleta2Aleatoria.vue";
 import Ruleta3 from '../ruleta/Ruleta3.vue';
 import Historial from "../historial/Historial.vue";
-import SubirIncidencias from "../incidencias/SubirIncidencias.vue";
+import ModalResultado from './ModalResultado.vue';
 
 const API_URL = import.meta.env.PUBLIC_API_URL;
 
@@ -24,6 +23,7 @@ const subcategorias = ref([]);
 const equipos = ref([]);
 const alumnosdelequipo = ref([]);
 
+//
 const equipo_seleccionado = ref(null);
 const categoria_seleccionada = ref(null);
 const subcategoria_seleccionada = ref(null);
@@ -33,8 +33,8 @@ const alumno_seleccionado = ref(null);
 const otro_equipo_seleccionado = ref(null);
 const alumno_otro_equipo = ref(null);
 const alumnos_otros_equipos = ref([]);
-//
 
+//
 const contenido_ruleta = ref([]);
 const hay_subcategoria = ref(false);
 const comentario = ref('');
@@ -47,6 +47,13 @@ const nroSemanas = ref(1);
 const gruposYaEjecutados = ref([]);
 const semanasCompletas = ref([]);
 
+// Para Modal
+const showModalResultado = ref(false);
+const resultadoModal = ref("");
+
+const toggleModalResultado = () => {
+    showModalResultado.value = !showModalResultado.value;
+};
 
 // Cargar el número de semanas de la instancia
 async function cargarNumeroDeSemanas() {
@@ -184,7 +191,7 @@ const actualizar_equipo = (resultado) => {
 	equipo_seleccionado.value = resultado;
 	can_spin.value = true;
 }
-const equipoEncontrado = equipos.value.find(e => e.nombre === resultado);
+
 // Actualizar ruleta según resultado
 const actualizarRuleta = async (resultado) => {
 	if (categorias.value.includes(resultado)) {
@@ -212,6 +219,8 @@ const actualizarRuleta = async (resultado) => {
 				equipo_seleccionado.value = equipoEncontrado.id;
 				await getAlumnos(equipoEncontrado.id);  // Espera a cargar los alumnos
 			}
+			resultadoModal.value = resultado;
+			toggleModalResultado();
 			return;
 		}
 
@@ -231,6 +240,8 @@ const actualizarRuleta = async (resultado) => {
 			}
 		}
 	}
+	resultadoModal.value = resultado;
+	toggleModalResultado();
 };
 
 async function subirBackend() {
@@ -416,6 +427,8 @@ onMounted(() => {
 				</button>
 			</section>
 		</div>
+		<!-- Modal de Resultado -->
+		<ModalResultado :isModalOpen="showModalResultado" :resultado="resultadoModal" @close-modal="toggleModalResultado" />
 	</div>
 </template>
 
