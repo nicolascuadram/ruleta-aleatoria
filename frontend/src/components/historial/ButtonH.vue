@@ -4,7 +4,7 @@
       <div class="flex flex-row items-center justify-end">
         <a
           :href="`/historial/${id}`"
-          class="bg-zinc-50 text-zinc-900 font-medium px-4 py-2 rounded-md cursor-pointer hover:bg-zinc-300 transition duration-300 shadow-md text-nowrap"
+          class="bg-zinc-50 text-zinc-900 font-medium px-4 py-2 rounded-md cursor-pointer hover:bg-zinc-300 transition duration-300 shadow-md text-nowrap w-28 text-center"
         >
           Historial
         </a>

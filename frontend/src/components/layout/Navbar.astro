@@ -1,9 +1,11 @@
 ---
 import SubirIncidencias from "../../components/incidencias/SubirIncidencias.vue";
 import Historial from "../../components/historial/ButtonH.vue";
-
+import Back from "../../components/historial/ButtonBack.vue";
 // Detectamos si estamos en la ruta raíz "/"
 const isHome = Astro.url.pathname === "/";
+const isInstancia = Astro.url.pathname.startsWith("/instancia");
+const isHistorial = Astro.url.pathname.startsWith("/historial");
 ---
 
 <nav class="w-full flex justify-between items-center p-4 bg-zinc-900 border-b border-zinc-800 shadow-md">
@@ -15,7 +17,8 @@ const isHome = Astro.url.pathname === "/";
   <!-- Lado derecho -->
   <div class="flex justify-end items-center gap-4">
     {isHome && <SubirIncidencias client:load />}
-    {!isHome && <Historial client:load />}
+    {isInstancia && <Historial client:load />}
+    {isHistorial && <Back client:load />}
   </div>
 </nav>
 
