@@ -259,9 +259,9 @@ async function subirBackend() {
 		const body = {
 			ref_incidencia: incidenciaSeleccionada.id,
 			ref_grupo: equipo_seleccionado.value,
-			alumno_escogido: alumno_seleccionado.value?.id,
+			alumno_escogido: alumno_seleccionado.value?.nombre,
 			grupo_intercambio: otro_equipo_seleccionado.value,
-			alumno_intercambio: alumno_otro_equipo.value?.id,
+			alumno_intercambio: alumno_otro_equipo.value?.nombre,
 			semana: semanaSeleccionada.value,
 			comentario: comentario.value
 		};
@@ -325,7 +325,6 @@ onMounted(() => {
 		<div class="flex flex-col p-4 md:overflow-y-scroll hide-scrollbar gap-4">
 			<div class="flex flex-wrap justify-start items-center gap-2">
 				<CrearEquipos :id="id" />
-				<Historial :id="id" />
 			</div>
 			<!-- Selector de semana -->
 			<div class="flex flex-col">

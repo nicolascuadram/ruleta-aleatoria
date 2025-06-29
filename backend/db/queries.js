@@ -5,7 +5,7 @@ export const getQueries = {
     GetIncidencias: "SELECT * FROM incidencia",
     GetCategories: "SELECT categoria FROM incidencia",
     GetRegistros: "SELECT r.id as id, i.categoria as tipo_incidencia, i.subcategoria as incidencia, r.alumno_escogido as alumno,r.grupo_intercambio as grupo_intercambio, r.alumno_intercambio as alumno_intercambio,  r.fecha, r.comentario,r.semana, g.nombre AS grupo FROM registro r JOIN incidencia i ON r.ref_incidencia = i.id JOIN grupo g ON r.ref_grupo = g.id ORDER BY r.fecha DESC",
-    GetRegistrosByInstancia: "SELECT r.id as id, i.categoria as tipo_incidencia, i.subcategoria as incidencia, r.alumno_escogido as alumno,r.grupo_intercambio as grupo_intercambio, r.alumno_intercambio as alumno_intercambio, r.fecha, r.comentario,r.semana, g.nombre AS grupo FROM registro r JOIN incidencia i ON r.ref_incidencia = i.id JOIN grupo g ON r.ref_grupo = g.id WHERE g.ref_instancia = $1 ORDER BY r.fecha DESC",
+    GetRegistrosByInstancia: "SELECT r.id as id, i.categoria as tipo_incidencia, i.subcategoria as incidencia, r.alumno_escogido as alumno,r.grupo_intercambio as grupo_intercambio, r.alumno_intercambio as alumno_intercambio, r.fecha, r.comentario,r.semana, g.nombre AS grupo FROM registro r JOIN incidencia i ON r.ref_incidencia = i.id JOIN grupo g ON r.ref_grupo = g.id WHERE g.ref_instancia = $1 ORDER BY r.semana ASC",
     GetInstanciaById: "SELECT * FROM instancia WHERE id = $1",
     GetGruposByInstancia: "SELECT * FROM grupo WHERE ref_instancia = $1",
     GetAlumnosByGrupo: "SELECT * FROM alumno WHERE ref_grupo = $1",
