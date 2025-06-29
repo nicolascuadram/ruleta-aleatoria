@@ -4,11 +4,12 @@
       <div class="flex flex-row items-center justify-end">
         <a
         :href="`/instancia/${id}`"
-        class="bg-zinc-50 text-zinc-900 font-medium px-4 py-2 rounded-md cursor-pointer hover:bg-zinc-300 transition duration-300 shadow-md text-nowrap w-28 text-center flex items-center justify-center gap-2"
+        class="bg-zinc-50 text-zinc-900 font-medium pl-3 pr-4 py-2 rounded-md cursor-pointer hover:bg-zinc-300 transition duration-300 shadow-md text-nowrap w-28 text-center flex items-center justify-center gap-1"
         >
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
+        Volver
         </a>
       </div>
     </div>

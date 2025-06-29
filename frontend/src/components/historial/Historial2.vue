@@ -56,7 +56,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <main class="min-h-screen bg-zinc-950 text-zinc-50 p-8">
+    <main class="bg-zinc-950 text-zinc-50 p-8 overflow-y-scroll hide-scrollbar">
         <div class="max-w-6xl mx-auto">
             <!-- Encabezado -->
             <header class="mb-8">
